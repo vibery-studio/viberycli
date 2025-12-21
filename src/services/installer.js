@@ -1,11 +1,20 @@
 const fs = require('fs-extra');
 const path = require('path');
 const logger = require('../utils/logger');
+const templateDownloader = require('./template-downloader');
 
 class Installer {
   constructor() {
     // Path to templates folder (bundled with CLI package)
     this.templatesDir = path.join(__dirname, '../../templates');
+    this.offlineMode = false;
+  }
+
+  /**
+   * Set offline mode (use bundled/cached templates only)
+   */
+  setOfflineMode(offline) {
+    this.offlineMode = offline;
   }
 
   /**
@@ -37,8 +46,7 @@ class Installer {
   /**
    * Install a template
    */
-  async install(template, targetDir = '.') {
-    const sourcePath = this.getSourcePath(template);
+  async install(template, targetDir = '.', onProgress = null) {
     const targetDirPath = this.getTargetDir(template.type, targetDir);
 
     // Determine target filename
@@ -52,7 +60,30 @@ class Installer {
     const targetPath = path.join(targetDirPath, targetFileName);
 
     try {
-      // Check if source exists
+      // Try remote download first (unless offline mode)
+      if (!this.offlineMode) {
+        try {
+          const result = await templateDownloader.downloadAndExtract(
+            template,
+            targetPath,
+            onProgress
+          );
+
+          if (result.success) {
+            return {
+              success: true,
+              path: targetPath,
+              source: 'remote'
+            };
+          }
+        } catch (error) {
+          // Fall through to bundled templates
+          logger.warn(`Remote fetch failed: ${error.message}`);
+        }
+      }
+
+      // Fallback to bundled templates
+      const sourcePath = this.getSourcePath(template);
       const sourceExists = await fs.pathExists(sourcePath);
       if (!sourceExists) {
         throw new Error(`Template source not found: ${sourcePath}`);
@@ -74,7 +105,7 @@ class Installer {
       return {
         success: true,
         path: targetPath,
-        source: sourcePath
+        source: 'bundled'
       };
     } catch (error) {
       return {
@@ -87,12 +118,33 @@ class Installer {
   /**
    * Install a skill (directory)
    */
-  async installSkill(template, targetDir = '.') {
-    const sourcePath = this.getSourcePath(template);
-    const targetPath = path.join(targetDir, '.claude/skills', template.name);
+  async installSkill(template, targetDir = '.', onProgress = null) {
+    const targetPath = path.join(targetDir, '.claude/skills', template.name.replace(/\.(md|json)$/, ''));
 
     try {
-      // Check if source exists and is a directory
+      // Try remote download first (unless offline mode)
+      if (!this.offlineMode) {
+        try {
+          const result = await templateDownloader.extractDirectory(
+            await templateDownloader.download(template, onProgress),
+            targetPath
+          );
+
+          if (result.success) {
+            return {
+              success: true,
+              path: targetPath,
+              source: 'remote'
+            };
+          }
+        } catch (error) {
+          // Fall through to bundled templates
+          logger.warn(`Remote fetch failed: ${error.message}`);
+        }
+      }
+
+      // Fallback to bundled templates
+      const sourcePath = this.getSourcePath(template);
       const stats = await fs.stat(sourcePath);
       if (!stats.isDirectory()) {
         throw new Error(`Skill must be a directory: ${sourcePath}`);
@@ -107,7 +159,7 @@ class Installer {
       return {
         success: true,
         path: targetPath,
-        source: sourcePath
+        source: 'bundled'
       };
     } catch (error) {
       return {
@@ -115,6 +167,50 @@ class Installer {
         error: error.message
       };
     }
+  }
+
+  /**
+   * Install a stack (bundle of templates)
+   */
+  async installStack(stack, registry, targetDir = '.') {
+    const results = {
+      success: true,
+      installed: [],
+      failed: [],
+      stack: stack
+    };
+
+    for (const item of stack.templates) {
+      // Find the template in registry
+      const template = await registry.findTemplate(item.name, item.type);
+
+      if (!template) {
+        results.failed.push({ ...item, error: 'Template not found in registry' });
+        continue;
+      }
+
+      // Install based on type
+      let result;
+      switch (template.type) {
+        case 'mcp':
+          result = await this.installMCP(template, targetDir);
+          break;
+        case 'skill':
+          result = await this.installSkill(template, targetDir);
+          break;
+        default:
+          result = await this.install(template, targetDir);
+      }
+
+      if (result.success) {
+        results.installed.push({ ...item, path: result.path });
+      } else {
+        results.failed.push({ ...item, error: result.error });
+      }
+    }
+
+    results.success = results.failed.length === 0;
+    return results;
   }
 
   /**

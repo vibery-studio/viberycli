@@ -1,17 +1,26 @@
 const fs = require('fs-extra');
 const path = require('path');
+const remoteRegistry = require('./remote-registry');
 
 class Registry {
   constructor() {
     this.registryPath = path.join(__dirname, '../../registry.json');
+    this.stacksPath = path.join(__dirname, '../../stacks.json');
     this.data = null;
+    this.stacksData = null;
+    this.offlineMode = false;
+  }
+
+  setOfflineMode(offline) {
+    this.offlineMode = offline;
   }
 
   async load() {
     if (this.data) return this.data;
 
     try {
-      this.data = await fs.readJson(this.registryPath);
+      // Try remote registry first (unless offline mode)
+      this.data = await remoteRegistry.getRegistry(this.offlineMode);
       return this.data;
     } catch (error) {
       throw new Error(`Failed to load registry: ${error.message}`);
@@ -84,6 +93,27 @@ class Registry {
     }
 
     return counts;
+  }
+
+  async loadStacks() {
+    if (this.stacksData) return this.stacksData;
+
+    try {
+      this.stacksData = await fs.readJson(this.stacksPath);
+      return this.stacksData;
+    } catch (error) {
+      throw new Error(`Failed to load stacks: ${error.message}`);
+    }
+  }
+
+  async getStacks() {
+    const data = await this.loadStacks();
+    return data.stacks || [];
+  }
+
+  async findStack(name) {
+    const stacks = await this.getStacks();
+    return stacks.find(s => s.id === name || s.name.toLowerCase() === name.toLowerCase());
   }
 }
 

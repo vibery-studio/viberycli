@@ -1,6 +1,6 @@
 {
   "name": "vibery",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "CLI tool for installing Claude Code templates",
   "main": "src/index.js",
   "bin": {
@@ -10,7 +10,8 @@
     "bin",
     "src",
     "templates",
-    "registry.json"
+    "registry.json",
+    "stacks.json"
   ],
   "scripts": {
     "start": "node bin/vibery.js",
@@ -36,6 +37,7 @@
     "chalk": "^4.1.2",
     "commander": "^11.1.0",
     "fs-extra": "^11.2.0",
-    "ora": "^5.4.1"
+    "ora": "^5.4.1",
+    "tar": "^6.2.0"
   }
 }
