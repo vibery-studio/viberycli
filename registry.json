@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "source": "generated",
-  "generated": "2025-12-21T04:47:28.982Z",
+  "generated": "2025-12-21T07:00:27.399Z",
   "templates": {
     "agents": [
       {
@@ -1403,6 +1403,87 @@
         "description": "Permissions: 0 allow, 3 deny rules"
       }
     ],
-    "skills": []
+    "skills": [
+      {
+        "name": "algorithmic-art",
+        "path": "algorithmic-art",
+        "description": "Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. Use this when users request creating art using c..."
+      },
+      {
+        "name": "brand-guidelines",
+        "path": "brand-guidelines",
+        "description": "Applies Anthropic's official brand colors and typography to any sort of artifact that may benefit from having Anthropic's look-and-feel. Use it whe..."
+      },
+      {
+        "name": "canvas-design",
+        "path": "canvas-design",
+        "description": "Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, pi..."
+      },
+      {
+        "name": "doc-coauthoring",
+        "path": "doc-coauthoring",
+        "description": "Guide users through a structured workflow for co-authoring documentation. Use when user wants to write documentation, proposals, technical specs, d..."
+      },
+      {
+        "name": "docx",
+        "path": "docx",
+        "description": "\"Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. W..."
+      },
+      {
+        "name": "frontend-design",
+        "path": "frontend-design",
+        "description": "Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages..."
+      },
+      {
+        "name": "internal-comms",
+        "path": "internal-comms",
+        "description": "A set of resources to help me write all kinds of internal communications, using the formats that my company likes to use. Claude should use this sk..."
+      },
+      {
+        "name": "mcp-builder",
+        "path": "mcp-builder",
+        "description": "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tool..."
+      },
+      {
+        "name": "pdf",
+        "path": "pdf",
+        "description": "Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. When Cla..."
+      },
+      {
+        "name": "pptx",
+        "path": "pptx",
+        "description": "\"Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) ..."
+      },
+      {
+        "name": "skill-creator",
+        "path": "skill-creator",
+        "description": "Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Cla..."
+      },
+      {
+        "name": "slack-gif-creator",
+        "path": "slack-gif-creator",
+        "description": "Knowledge and utilities for creating animated GIFs optimized for Slack. Provides constraints, validation tools, and animation concepts. Use when us..."
+      },
+      {
+        "name": "theme-factory",
+        "path": "theme-factory",
+        "description": "Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landing pages, etc. There are 10 pre-set themes w..."
+      },
+      {
+        "name": "web-artifacts-builder",
+        "path": "web-artifacts-builder",
+        "description": "Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn..."
+      },
+      {
+        "name": "webapp-testing",
+        "path": "webapp-testing",
+        "description": "Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior,..."
+      },
+      {
+        "name": "xlsx",
+        "path": "xlsx",
+        "description": "\"Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude nee..."
+      }
+    ]
   }
 }
