@@ -1,6 +1,6 @@
 {
   "name": "vibery",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CLI tool for installing Claude Code templates",
   "main": "src/index.js",
   "bin": {
