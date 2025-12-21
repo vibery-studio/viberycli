@@ -10,6 +10,8 @@ Vibery CLI is a command-line tool for installing Claude Code templates with a fo
 
 **Core Utility:** One-command template installation for Claude Code projects.
 
+**Phase 1 Status:** COMPLETE - Core CLI fully functional with 294 templates distributed via GitHub Releases.
+
 ## Functional Requirements
 
 ### F1: Template Installation
@@ -194,13 +196,23 @@ Total bundle size: ~2MB (node_modules).
 
 ## Deployment Model
 
-**Distribution:** npm package (`vibery`)
+**Distribution:** npm package (`vibery`) + GitHub Releases
 - Published to npm registry
 - `npm install -g vibery` for global CLI
 - `npx vibery` for one-off usage
 - Linked locally during development: `npm link`
 
-**Updates:** Semantic versioning (registry updates via npm patches)
+**Template Distribution:**
+- **Repository:** [vibery-studio/templates](https://github.com/vibery-studio/templates)
+- **Format:** GitHub Releases with tarball (294 templates)
+- **Contents:**
+  - 220+ Agents (.md files)
+  - 40+ Commands (.md files)
+  - 25+ MCPs (JSON configs)
+  - 8+ Settings (JSON configs)
+  - 19+ Hooks (JSON configs)
+  - 1+ Skill (directory structures)
+- **Updates:** Semantic versioning (registry updates via npm patches + GitHub releases)
 
 ## Success Metrics
 

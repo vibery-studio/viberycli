@@ -371,7 +371,9 @@ bin/vibery.js
 - Merge: `.mcp.json` (read → update → write)
 
 ### Network
-- None (static registry, offline-first design)
+- GitHub Releases API (optional, future dynamic registry)
+- Repository: [vibery-studio/templates](https://github.com/vibery-studio/templates)
+- Current: Static registry.json (offline-first, production-ready)
 
 ### Environment
 - CLI expects: Node.js 14+
@@ -455,9 +457,10 @@ Distribution:
 
 ## Disaster Recovery
 
-**Registry Loss:** Use version control (git) to restore
+**Registry Loss:** Use version control (git) to restore; GitHub Releases serves as backup
 **Configuration Loss:** Recreate .claude/\*.json files
-**Installation Failure:** Manual file copy from templates/
+**Installation Failure:** Manual file copy from templates/ or [vibery-studio/templates](https://github.com/vibery-studio/templates) releases
+**Template Loss:** GitHub repository maintains authoritative copy of all 294 templates
 
 ## Architecture Strengths
 

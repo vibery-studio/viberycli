@@ -295,15 +295,17 @@ vibery install nextjs-architecture-expert
 ```
 
 ### Registry Updates
-Update `registry.json` via external build process. Format:
+Update `registry.json` via external build process or GitHub Releases. Format:
 ```json
 {
   "version": "1.0.0",
-  "source": "generated",
+  "source": "vibery-studio/templates",
   "generated": "2025-12-21T...",
   "templates": { ... }
 }
 ```
+
+**Template Source:** [vibery-studio/templates](https://github.com/vibery-studio/templates) (294 templates via GitHub Releases)
 
 ## Performance Considerations
 
