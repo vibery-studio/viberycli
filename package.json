@@ -1,0 +1,41 @@
+{
+  "name": "vibery",
+  "version": "1.0.0",
+  "description": "CLI tool for installing Claude Code templates",
+  "main": "src/index.js",
+  "bin": {
+    "vibery": "./bin/vibery.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "templates",
+    "registry.json"
+  ],
+  "scripts": {
+    "start": "node bin/vibery.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "templates",
+    "agents",
+    "mcp",
+    "ai",
+    "cli"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vibery-studio/viberycli"
+  },
+  "homepage": "https://github.com/vibery-studio/viberycli",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "fs-extra": "^11.2.0",
+    "ora": "^5.4.1"
+  }
+}
