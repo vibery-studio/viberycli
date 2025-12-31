@@ -5,9 +5,9 @@ const cacheManager = require("./cache-manager");
 
 class RemoteRegistry {
   constructor() {
-    // GitHub raw content URL - templates repo is single source of truth
+    // GitHub raw content URL - viberycli repo hosts templates
     this.repoOwner = process.env.VIBERY_REPO_OWNER || "vibery-studio";
-    this.repoName = process.env.VIBERY_REPO_NAME || "templates";
+    this.repoName = process.env.VIBERY_REPO_NAME || "viberycli";
     this.branch = process.env.VIBERY_BRANCH || "main";
 
     // Base URLs (flat structure: /agents, /skills, etc.)

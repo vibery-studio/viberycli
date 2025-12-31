@@ -8,6 +8,26 @@ class Installer {
     // Path to templates folder (bundled with CLI package - offline fallback)
     this.templatesDir = path.join(__dirname, "../../templates");
     this.offlineMode = false;
+    this._manifestCache = null;
+  }
+
+  /**
+   * Get templates manifest (cached)
+   * Manifest lists all templates - no GitHub API needed
+   */
+  async getTemplatesManifest() {
+    if (this._manifestCache) {
+      return this._manifestCache;
+    }
+
+    const manifestUrl = `${remoteRegistry.templatesBaseUrl}/templates-manifest.json`;
+    try {
+      const content = await remoteRegistry.fetchFile(manifestUrl);
+      this._manifestCache = JSON.parse(content);
+      return this._manifestCache;
+    } catch (error) {
+      throw new Error("Templates manifest not available");
+    }
   }
 
   /**
@@ -139,8 +159,7 @@ class Installer {
             return result;
           }
         } catch (error) {
-          // Fall through to bundled templates
-          logger.warn(`Remote fetch failed: ${error.message}`);
+          // Silent fallback to bundled - no warning needed
         }
       }
 
@@ -171,23 +190,26 @@ class Installer {
 
   /**
    * Fetch skill from remote GitHub repository
-   * Uses GitHub API to list directory contents
+   * Strategy: 1) Try manifest (no rate limit) 2) Fall back to API
    */
   async fetchSkillFromRemote(skillName, targetPath, onProgress = null) {
-    const https = require("https");
+    // Try manifest-based fetch first (no rate limits)
+    try {
+      const result = await this.fetchSkillFromManifest(skillName, targetPath);
+      if (result.success) {
+        return result;
+      }
+    } catch (error) {
+      // Manifest not available or failed, try API
+    }
 
-    // Use GitHub API to get directory listing (flat structure: /skills/name)
+    // Fall back to GitHub API (rate limited but works without manifest)
     const apiUrl = `https://api.github.com/repos/${remoteRegistry.repoOwner}/${remoteRegistry.repoName}/contents/skills/${skillName}?ref=${remoteRegistry.branch}`;
 
     try {
-      // Fetch directory listing from GitHub API
       const files = await this.fetchGitHubDirectory(apiUrl);
-
-      // Create target directory
       await fs.ensureDir(targetPath);
-
-      // Download all files recursively
-      await this.downloadSkillFiles(files, targetPath, onProgress);
+      await this.downloadSkillFilesFromAPI(files, targetPath, onProgress);
 
       return {
         success: true,
@@ -197,6 +219,53 @@ class Installer {
     } catch (error) {
       throw new Error(`Failed to fetch skill: ${error.message}`);
     }
+  }
+
+  /**
+   * Fetch skill using unified manifest (no GitHub API, no rate limits)
+   */
+  async fetchSkillFromManifest(skillName, targetPath) {
+    // Fetch unified templates manifest
+    const manifest = await this.getTemplatesManifest();
+
+    // Check if skill exists in manifest
+    const files = manifest.skills?.[skillName];
+    if (!files || files.length === 0) {
+      throw new Error("Skill not in manifest");
+    }
+
+    // Create target directory
+    await fs.ensureDir(targetPath);
+
+    // Download all files from manifest
+    const baseUrl = `${remoteRegistry.templatesBaseUrl}/skills/${skillName}`;
+    for (const filePath of files) {
+      const fileUrl = `${baseUrl}/${filePath}`;
+      const localPath = path.join(targetPath, filePath);
+
+      // Ensure subdirectory exists
+      await fs.ensureDir(path.dirname(localPath));
+
+      // Fetch and write file
+      try {
+        const content = await remoteRegistry.fetchFile(fileUrl);
+        await fs.writeFile(localPath, content);
+      } catch (error) {
+        // Try binary fetch for non-text files
+        try {
+          const buffer = await remoteRegistry.fetchBinary(fileUrl);
+          await fs.writeFile(localPath, buffer);
+        } catch (binError) {
+          throw new Error(`Failed to fetch ${filePath}`);
+        }
+      }
+    }
+
+    return {
+      success: true,
+      path: targetPath,
+      source: "remote",
+    };
   }
 
   /**
@@ -253,9 +322,9 @@ class Installer {
   }
 
   /**
-   * Download skill files recursively
+   * Download skill files recursively from GitHub API response
    */
-  async downloadSkillFiles(items, targetDir, onProgress = null) {
+  async downloadSkillFilesFromAPI(items, targetDir, onProgress = null) {
     for (const item of items) {
       const targetPath = path.join(targetDir, item.name);
 
@@ -267,7 +336,7 @@ class Installer {
         // Recursively fetch subdirectory
         await fs.ensureDir(targetPath);
         const subItems = await this.fetchGitHubDirectory(item.url);
-        await this.downloadSkillFiles(subItems, targetPath, onProgress);
+        await this.downloadSkillFilesFromAPI(subItems, targetPath, onProgress);
       }
     }
   }
