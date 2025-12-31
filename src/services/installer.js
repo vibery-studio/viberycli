@@ -1,17 +1,17 @@
 const fs = require("fs-extra");
 const path = require("path");
 const logger = require("../utils/logger");
-const templateDownloader = require("./template-downloader");
+const remoteRegistry = require("./remote-registry");
 
 class Installer {
   constructor() {
-    // Path to templates folder (bundled with CLI package)
+    // Path to templates folder (bundled with CLI package - offline fallback)
     this.templatesDir = path.join(__dirname, "../../templates");
     this.offlineMode = false;
   }
 
   /**
-   * Set offline mode (use bundled/cached templates only)
+   * Set offline mode (use bundled templates only)
    */
   setOfflineMode(offline) {
     this.offlineMode = offline;
@@ -35,7 +35,7 @@ class Installer {
   }
 
   /**
-   * Get the source path for a template
+   * Get the source path for a bundled template
    */
   getSourcePath(template) {
     const type = template.type;
@@ -48,7 +48,7 @@ class Installer {
   }
 
   /**
-   * Install a template
+   * Install a template (agent, command, mcp, setting, hook)
    */
   async install(template, targetDir = ".", onProgress = null) {
     const targetDirPath = this.getTargetDir(template.type, targetDir);
@@ -67,22 +67,26 @@ class Installer {
     const targetPath = path.join(targetDirPath, targetFileName);
 
     try {
-      // Try remote download first (unless offline mode)
+      // Try remote fetch first (unless offline mode)
       if (!this.offlineMode) {
         try {
-          const result = await templateDownloader.downloadAndExtract(
-            template,
-            targetPath,
-            onProgress,
+          const url = remoteRegistry.getTemplateUrl(
+            template.type,
+            template.name,
           );
+          const content = await remoteRegistry.fetchFile(url);
 
-          if (result.success) {
-            return {
-              success: true,
-              path: targetPath,
-              source: "remote",
-            };
-          }
+          // Ensure target directory exists
+          await fs.ensureDir(targetDirPath);
+
+          // Write file
+          await fs.writeFile(targetPath, content);
+
+          return {
+            success: true,
+            path: targetPath,
+            source: "remote",
+          };
         } catch (error) {
           // Fall through to bundled templates
           logger.warn(`Remote fetch failed: ${error.message}`);
@@ -93,18 +97,11 @@ class Installer {
       const sourcePath = this.getSourcePath(template);
       const sourceExists = await fs.pathExists(sourcePath);
       if (!sourceExists) {
-        throw new Error(`Template source not found: ${sourcePath}`);
+        throw new Error(`Template not found: ${template.name}`);
       }
 
       // Create target directory
       await fs.ensureDir(targetDirPath);
-
-      // Check if target already exists
-      const targetExists = await fs.pathExists(targetPath);
-      if (targetExists) {
-        logger.warn(`File already exists: ${targetPath}`);
-        // For now, overwrite. Could add prompt later.
-      }
 
       // Copy file
       await fs.copy(sourcePath, targetPath);
@@ -123,30 +120,23 @@ class Installer {
   }
 
   /**
-   * Install a skill (directory)
+   * Install a skill (directory with SKILL.md and subdirectories)
    */
   async installSkill(template, targetDir = ".", onProgress = null) {
-    const targetPath = path.join(
-      targetDir,
-      ".claude/skills",
-      template.name.replace(/\.(md|json)$/, ""),
-    );
+    const skillName = template.name.replace(/\.(md|json)$/, "");
+    const targetPath = path.join(targetDir, ".claude/skills", skillName);
 
     try {
-      // Try remote download first (unless offline mode)
+      // Try remote fetch first (unless offline mode)
       if (!this.offlineMode) {
         try {
-          const result = await templateDownloader.extractDirectory(
-            await templateDownloader.download(template, onProgress),
+          const result = await this.fetchSkillFromRemote(
+            skillName,
             targetPath,
+            onProgress,
           );
-
           if (result.success) {
-            return {
-              success: true,
-              path: targetPath,
-              source: "remote",
-            };
+            return result;
           }
         } catch (error) {
           // Fall through to bundled templates
@@ -156,21 +146,176 @@ class Installer {
 
       // Fallback to bundled templates
       const sourcePath = this.getSourcePath(template);
-      const stats = await fs.stat(sourcePath);
-      if (!stats.isDirectory()) {
-        throw new Error(`Skill must be a directory: ${sourcePath}`);
+      const stats = await fs.stat(sourcePath).catch(() => null);
+
+      if (!stats || !stats.isDirectory()) {
+        throw new Error(`Skill not found: ${skillName}`);
       }
 
-      // Create target directory
+      // Create target directory and copy
       await fs.ensureDir(targetPath);
-
-      // Copy entire directory
       await fs.copy(sourcePath, targetPath);
 
       return {
         success: true,
         path: targetPath,
         source: "bundled",
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+  }
+
+  /**
+   * Fetch skill from remote GitHub repository
+   * Uses GitHub API to list directory contents
+   */
+  async fetchSkillFromRemote(skillName, targetPath, onProgress = null) {
+    const https = require("https");
+
+    // Use GitHub API to get directory listing
+    const apiUrl = `https://api.github.com/repos/${remoteRegistry.repoOwner}/${remoteRegistry.repoName}/contents/cli/templates/skills/${skillName}?ref=${remoteRegistry.branch}`;
+
+    try {
+      // Fetch directory listing from GitHub API
+      const files = await this.fetchGitHubDirectory(apiUrl);
+
+      // Create target directory
+      await fs.ensureDir(targetPath);
+
+      // Download all files recursively
+      await this.downloadSkillFiles(files, targetPath, onProgress);
+
+      return {
+        success: true,
+        path: targetPath,
+        source: "remote",
+      };
+    } catch (error) {
+      throw new Error(`Failed to fetch skill: ${error.message}`);
+    }
+  }
+
+  /**
+   * Fetch directory listing from GitHub API
+   */
+  async fetchGitHubDirectory(apiUrl) {
+    return new Promise((resolve, reject) => {
+      const https = require("https");
+      const url = new URL(apiUrl);
+
+      const options = {
+        hostname: url.hostname,
+        path: url.pathname + url.search,
+        headers: {
+          "User-Agent": "vibery-cli",
+          Accept: "application/vnd.github.v3+json",
+        },
+      };
+
+      const timeoutId = setTimeout(() => {
+        reject(new Error("GitHub API timeout"));
+      }, 10000);
+
+      https
+        .get(options, (res) => {
+          if (res.statusCode === 404) {
+            clearTimeout(timeoutId);
+            reject(new Error("Skill not found in repository"));
+            return;
+          }
+
+          if (res.statusCode !== 200) {
+            clearTimeout(timeoutId);
+            reject(new Error(`GitHub API error: HTTP ${res.statusCode}`));
+            return;
+          }
+
+          let data = "";
+          res.on("data", (chunk) => (data += chunk));
+          res.on("end", () => {
+            clearTimeout(timeoutId);
+            try {
+              resolve(JSON.parse(data));
+            } catch (error) {
+              reject(new Error("Invalid JSON from GitHub API"));
+            }
+          });
+        })
+        .on("error", (err) => {
+          clearTimeout(timeoutId);
+          reject(err);
+        });
+    });
+  }
+
+  /**
+   * Download skill files recursively
+   */
+  async downloadSkillFiles(items, targetDir, onProgress = null) {
+    for (const item of items) {
+      const targetPath = path.join(targetDir, item.name);
+
+      if (item.type === "file") {
+        // Download file
+        const content = await remoteRegistry.fetchFile(item.download_url);
+        await fs.writeFile(targetPath, content);
+      } else if (item.type === "dir") {
+        // Recursively fetch subdirectory
+        await fs.ensureDir(targetPath);
+        const subItems = await this.fetchGitHubDirectory(item.url);
+        await this.downloadSkillFiles(subItems, targetPath, onProgress);
+      }
+    }
+  }
+
+  /**
+   * Install an MCP configuration
+   */
+  async installMCP(template, targetDir = ".") {
+    // MCPs need special handling - merge into existing config
+    const targetPath = path.join(
+      targetDir,
+      ".claude/mcps",
+      `${template.name}.json`,
+    );
+
+    try {
+      let content;
+
+      // Try remote first
+      if (!this.offlineMode) {
+        try {
+          const url = remoteRegistry.getTemplateUrl("mcp", template.name);
+          content = await remoteRegistry.fetchFile(url);
+        } catch (error) {
+          logger.warn(`Remote fetch failed: ${error.message}`);
+        }
+      }
+
+      // Fallback to bundled
+      if (!content) {
+        const sourcePath = this.getSourcePath(template);
+        const exists = await fs.pathExists(sourcePath);
+        if (!exists) {
+          throw new Error(`MCP template not found: ${template.name}`);
+        }
+        content = await fs.readFile(sourcePath, "utf-8");
+      }
+
+      // Ensure directory exists
+      await fs.ensureDir(path.dirname(targetPath));
+
+      // Write the MCP config
+      await fs.writeFile(targetPath, content);
+
+      return {
+        success: true,
+        path: targetPath,
+        source: content ? "remote" : "bundled",
       };
     } catch (error) {
       return {
@@ -225,52 +370,6 @@ class Installer {
 
     results.success = results.failed.length === 0;
     return results;
-  }
-
-  /**
-   * Install MCP to .mcp.json (merge)
-   */
-  async installMCP(template, targetDir = ".") {
-    const sourcePath = this.getSourcePath(template);
-    const mcpJsonPath = path.join(targetDir, ".mcp.json");
-
-    try {
-      // Read source MCP config
-      const sourceConfig = await fs.readJson(sourcePath);
-
-      // Read or create target .mcp.json
-      let targetConfig = { mcpServers: {} };
-      if (await fs.pathExists(mcpJsonPath)) {
-        targetConfig = await fs.readJson(mcpJsonPath);
-        if (!targetConfig.mcpServers) {
-          targetConfig.mcpServers = {};
-        }
-      }
-
-      // Merge MCP config
-      const mcpName = template.name.replace(".json", "");
-      if (sourceConfig.mcpServers) {
-        // Source has mcpServers object
-        Object.assign(targetConfig.mcpServers, sourceConfig.mcpServers);
-      } else {
-        // Source is a single MCP config
-        targetConfig.mcpServers[mcpName] = sourceConfig;
-      }
-
-      // Write merged config
-      await fs.writeJson(mcpJsonPath, targetConfig, { spaces: 2 });
-
-      return {
-        success: true,
-        path: mcpJsonPath,
-        source: sourcePath,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
   }
 }
 

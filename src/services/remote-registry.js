@@ -5,78 +5,97 @@ const cacheManager = require("./cache-manager");
 
 class RemoteRegistry {
   constructor() {
-    // Default to GitHub Releases, can be overridden by env var
-    this.baseUrl =
-      process.env.VIBERY_REGISTRY_URL ||
-      "https://github.com/vibery-studio/templates/releases/latest/download";
-    this.registryUrl = `${this.baseUrl}/registry.json`;
+    // GitHub raw content URL - templates available immediately after push
+    this.repoOwner = process.env.VIBERY_REPO_OWNER || "toantranct94";
+    this.repoName = process.env.VIBERY_REPO_NAME || "vibe-templates";
+    this.branch = process.env.VIBERY_BRANCH || "main";
+
+    // Base URLs
+    this.rawBaseUrl = `https://raw.githubusercontent.com/${this.repoOwner}/${this.repoName}/${this.branch}/cli`;
+    this.registryUrl = `${this.rawBaseUrl}/registry.json`;
+    this.templatesBaseUrl = `${this.rawBaseUrl}/templates`;
+
+    // Bundled registry as fallback for offline mode
     this.bundledRegistryPath = path.join(__dirname, "../../registry.json");
+
+    // Request timeout (5 seconds)
+    this.timeout = 5000;
   }
 
   /**
    * Fetch registry from remote or cache
-   * @param {boolean} offlineMode - Use cache only, no network requests
+   * @param {boolean} offlineMode - Use cache/bundled only, no network requests
    * @returns {Object} Registry data
    */
   async getRegistry(offlineMode = false) {
-    // Try cache first if offline mode
+    // Offline mode: cache → bundled
     if (offlineMode) {
       const cached = await cacheManager.getCachedRegistry();
       if (cached) return cached;
-
-      // Fall back to bundled registry
       return await this.getBundledRegistry();
     }
 
-    // Try cache (if valid)
+    // Online mode: cache → remote → bundled
     const cached = await cacheManager.getCachedRegistry();
-    if (cached) {
-      return cached;
-    }
+    if (cached) return cached;
 
-    // Try fetching from remote
     try {
       const data = await this.fetchRegistryFromRemote();
-      // Save to cache
       await cacheManager.saveRegistry(data);
       return data;
     } catch (error) {
-      // Fall back to bundled registry
+      // Fallback to bundled registry
       return await this.getBundledRegistry();
     }
   }
 
   /**
-   * Fetch registry from remote URL
+   * Fetch registry from GitHub raw URL with timeout
    */
   async fetchRegistryFromRemote() {
     return new Promise((resolve, reject) => {
-      https
-        .get(this.registryUrl, (res) => {
-          if (res.statusCode !== 200) {
-            reject(
-              new Error(`Failed to fetch registry: HTTP ${res.statusCode}`),
-            );
-            return;
-          }
+      const timeoutId = setTimeout(() => {
+        reject(new Error("Registry fetch timeout"));
+      }, this.timeout);
 
-          let data = "";
-          res.on("data", (chunk) => (data += chunk));
-          res.on("end", () => {
-            try {
-              const parsed = JSON.parse(data);
-              resolve(parsed);
-            } catch (error) {
-              reject(new Error("Invalid JSON in registry"));
-            }
-          });
-        })
-        .on("error", reject);
+      const handleResponse = (res) => {
+        // Follow redirects
+        if (res.statusCode === 301 || res.statusCode === 302) {
+          return https
+            .get(res.headers.location, handleResponse)
+            .on("error", (err) => {
+              clearTimeout(timeoutId);
+              reject(err);
+            });
+        }
+
+        if (res.statusCode !== 200) {
+          clearTimeout(timeoutId);
+          reject(new Error(`Failed to fetch registry: HTTP ${res.statusCode}`));
+          return;
+        }
+
+        let data = "";
+        res.on("data", (chunk) => (data += chunk));
+        res.on("end", () => {
+          clearTimeout(timeoutId);
+          try {
+            resolve(JSON.parse(data));
+          } catch (error) {
+            reject(new Error("Invalid JSON in registry"));
+          }
+        });
+      };
+
+      https.get(this.registryUrl, handleResponse).on("error", (err) => {
+        clearTimeout(timeoutId);
+        reject(err);
+      });
     });
   }
 
   /**
-   * Get bundled registry (fallback)
+   * Get bundled registry (offline fallback)
    */
   async getBundledRegistry() {
     try {
@@ -95,12 +114,129 @@ class RemoteRegistry {
   }
 
   /**
-   * Get archive URL for a template
+   * Get raw URL for a template file
+   * @param {string} type - Template type (agent, command, skill, etc.)
+   * @param {string} name - Template name
+   * @returns {string} Raw GitHub URL
    */
-  getArchiveUrl(type, name) {
-    // Remove file extension from name
+  getTemplateUrl(type, name) {
     const cleanName = name.replace(/\.(md|json)$/, "");
-    return `${this.baseUrl}/${type}--${cleanName}.tar.gz`;
+    const typeDir = type.endsWith("s") ? type : `${type}s`;
+
+    // Determine file extension based on type
+    const ext = ["mcp", "setting", "hook"].includes(type) ? "json" : "md";
+
+    return `${this.templatesBaseUrl}/${typeDir}/${cleanName}.${ext}`;
+  }
+
+  /**
+   * Get raw URL for a skill directory's SKILL.md
+   * @param {string} name - Skill name
+   * @returns {string} Raw GitHub URL
+   */
+  getSkillUrl(name) {
+    const cleanName = name.replace(/\.(md|json)$/, "");
+    return `${this.templatesBaseUrl}/skills/${cleanName}/SKILL.md`;
+  }
+
+  /**
+   * Get base URL for skill directory (for fetching subdirectories)
+   * @param {string} name - Skill name
+   * @returns {string} Base URL for skill
+   */
+  getSkillBaseUrl(name) {
+    const cleanName = name.replace(/\.(md|json)$/, "");
+    return `${this.templatesBaseUrl}/skills/${cleanName}`;
+  }
+
+  /**
+   * Fetch file content from GitHub raw URL
+   * @param {string} url - Raw GitHub URL
+   * @returns {Promise<string>} File content
+   */
+  async fetchFile(url) {
+    return new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        reject(new Error("File fetch timeout"));
+      }, this.timeout);
+
+      const handleResponse = (res) => {
+        if (res.statusCode === 301 || res.statusCode === 302) {
+          return https
+            .get(res.headers.location, handleResponse)
+            .on("error", (err) => {
+              clearTimeout(timeoutId);
+              reject(err);
+            });
+        }
+
+        if (res.statusCode === 404) {
+          clearTimeout(timeoutId);
+          reject(new Error("Template not found in remote repository"));
+          return;
+        }
+
+        if (res.statusCode !== 200) {
+          clearTimeout(timeoutId);
+          reject(new Error(`Failed to fetch: HTTP ${res.statusCode}`));
+          return;
+        }
+
+        let data = "";
+        res.on("data", (chunk) => (data += chunk));
+        res.on("end", () => {
+          clearTimeout(timeoutId);
+          resolve(data);
+        });
+      };
+
+      https.get(url, handleResponse).on("error", (err) => {
+        clearTimeout(timeoutId);
+        reject(err);
+      });
+    });
+  }
+
+  /**
+   * Fetch binary file from GitHub raw URL
+   * @param {string} url - Raw GitHub URL
+   * @returns {Promise<Buffer>} File buffer
+   */
+  async fetchBinary(url) {
+    return new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        reject(new Error("Binary fetch timeout"));
+      }, this.timeout * 2); // Longer timeout for binary
+
+      const handleResponse = (res) => {
+        if (res.statusCode === 301 || res.statusCode === 302) {
+          return https
+            .get(res.headers.location, handleResponse)
+            .on("error", (err) => {
+              clearTimeout(timeoutId);
+              reject(err);
+            });
+        }
+
+        if (res.statusCode !== 200) {
+          clearTimeout(timeoutId);
+          reject(new Error(`Failed to fetch: HTTP ${res.statusCode}`));
+          return;
+        }
+
+        const chunks = [];
+        res.on("data", (chunk) => chunks.push(chunk));
+        res.on("end", () => {
+          clearTimeout(timeoutId);
+          resolve(Buffer.concat(chunks));
+        });
+      };
+
+      https.get(url, handleResponse).on("error", (err) => {
+        clearTimeout(timeoutId);
+        reject(err);
+      });
+    });
   }
 }
 
