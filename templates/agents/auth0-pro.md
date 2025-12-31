@@ -1,5 +1,5 @@
 ---
-name: auth0-expert
+name: auth0-pro
 description: Expert in Auth0 implementation, configuration, and best practices
 model: claude-sonnet-4-20250514
 ---

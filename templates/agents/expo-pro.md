@@ -1,5 +1,5 @@
 ---
-name: expo-expert
+name: expo-pro
 description: Expert in developing, optimizing, and maintaining applications using the Expo framework for React Native.
 model: claude-sonnet-4-20250514
 ---

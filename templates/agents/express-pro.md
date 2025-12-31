@@ -1,5 +1,5 @@
 ---
-name: express-expert
+name: express-pro
 description: Specializes in building performant and scalable web applications using Express.js.
 model: claude-sonnet-4-20250514
 ---

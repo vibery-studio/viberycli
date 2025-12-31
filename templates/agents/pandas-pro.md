@@ -1,5 +1,5 @@
 ---
-name: pandas-expert
+name: pandas-pro
 description: Expert in data manipulation and analysis using pandas library in Python.
 model: claude-sonnet-4-20250514
 ---

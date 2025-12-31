@@ -1,5 +1,5 @@
 ---
-name: typeorm-expert
+name: typeorm-pro
 description: Expertise in TypeORM for defining and managing data models with efficient database interactions in Node.js applications
 model: claude-sonnet-4-20250514
 ---

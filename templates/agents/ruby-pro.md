@@ -1,5 +1,5 @@
 ---
-name: ruby-expert
+name: ruby-pro
 description: Expert in Ruby programming language, focusing on idiomatic Ruby, performance optimization, and best practices.
 model: claude-sonnet-4-20250514
 ---

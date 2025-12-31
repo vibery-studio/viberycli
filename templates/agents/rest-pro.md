@@ -1,5 +1,5 @@
 ---
-name: rest-expert
+name: rest-pro
 description: Master in designing and implementing RESTful APIs with focus on best practices, HTTP methods, status codes, and resource modeling.
 model: claude-sonnet-4-20250514
 ---

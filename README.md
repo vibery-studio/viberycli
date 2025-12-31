@@ -48,6 +48,7 @@ vibery search "database"
 Install a Claude Code template to your project.
 
 **Options:**
+
 - `-a, --agent <name>` - Install agent template
 - `-c, --command <name>` - Install command template
 - `-m, --mcp <name>` - Install MCP integration
@@ -58,6 +59,7 @@ Install a Claude Code template to your project.
 - `-y, --yes` - Skip confirmation prompts
 
 **Examples:**
+
 ```bash
 vibery install nextjs-architecture-expert
 vibery install --agent accessibility-tester
@@ -66,6 +68,7 @@ vibery install --skill research-analyzer
 ```
 
 **Installation Destinations:**
+
 - Agents → `.claude/agents/`
 - Commands → `.claude/commands/`
 - MCPs → `.mcp.json` (merged)
@@ -80,9 +83,11 @@ After installation, restart Claude Code to activate new templates.
 List all available templates with counts and descriptions.
 
 **Options:**
+
 - `-t, --type <type>` - Filter by type (agents, commands, mcps, settings, hooks, skills)
 
 **Examples:**
+
 ```bash
 vibery list                 # Show all with summary
 vibery list -t agents       # Only agents
@@ -94,9 +99,11 @@ vibery list --type commands # Only commands
 Search templates by name or description (case-insensitive).
 
 **Options:**
+
 - `-t, --type <type>` - Filter search results by type
 
 **Examples:**
+
 ```bash
 vibery search nextjs
 vibery search "database" -t agents
@@ -105,18 +112,19 @@ vibery search "auth" --type commands
 
 ## Template Types
 
-| Type | Icon | Destination | Use Case |
-|------|------|-------------|----------|
-| Agent | 🤖 | `.claude/agents/` | Specialized AI roles (e.g., "Next.js Expert") |
-| Command | ⚡ | `.claude/commands/` | Automated tasks (e.g., "Setup CI/CD") |
-| MCP | 🔌 | `.mcp.json` | Tool integrations (GitHub, Slack, etc.) |
-| Skill | 🎨 | `.claude/skills/` | Reusable code packages |
-| Setting | ⚙️ | `.claude/` | Configuration and preferences |
-| Hook | 🪝 | `.claude/` | Automation rules (notifications, checks) |
+| Type    | Icon | Destination         | Use Case                                      |
+| ------- | ---- | ------------------- | --------------------------------------------- |
+| Agent   | 🤖   | `.claude/agents/`   | Specialized AI roles (e.g., "Next.js Expert") |
+| Command | ⚡   | `.claude/commands/` | Automated tasks (e.g., "Setup CI/CD")         |
+| MCP     | 🔌   | `.mcp.json`         | Tool integrations (GitHub, Slack, etc.)       |
+| Skill   | 🎨   | `.claude/skills/`   | Reusable code packages                        |
+| Setting | ⚙️   | `.claude/`          | Configuration and preferences                 |
+| Hook    | 🪝   | `.claude/`          | Automation rules (notifications, checks)      |
 
 ## Examples
 
 ### Install Production Stack
+
 ```bash
 # Next.js architecture expert
 vibery install nextjs-architecture-expert
@@ -129,6 +137,7 @@ vibery install security-auditor
 ```
 
 ### Install Development Tools
+
 ```bash
 # Database optimizer
 vibery install database-optimizer
@@ -141,6 +150,7 @@ vibery install test-automator
 ```
 
 ### Install Integrations
+
 ```bash
 # GitHub MCP
 vibery install --mcp github
@@ -155,16 +165,19 @@ vibery install --setting allow-postgres
 ## Architecture
 
 **Services:**
+
 - **Registry:** Loads and searches 600+ templates
 - **Installer:** Handles type-specific file operations
 - **Logger:** Terminal styling and output
 
 **Data:**
+
 - Registry stored in `registry.json` (static, 600+ templates)
 - Templates sourced from `/templates/` directory
 - Installation paths configured per type
 
 **Design:**
+
 - Minimal dependencies (4 packages)
 - Singleton services for efficiency
 - Type-based dispatch for installation
@@ -236,19 +249,34 @@ src/
 ## Changelog
 
 ### v1.0.0 (2025-12-21)
+
 - Initial release
 - Support for 6 template types
 - 600+ templates in registry
 - Full-text search
 - Color-coded terminal output
 
-## License
+## License & Credits
 
-MIT
+**License:** MIT - See LICENSE file in repository
+
+### Template Sources
+
+Templates curated from MIT-licensed community repositories:
+
+- [0xfurai/claude-code-subagents](https://github.com/0xfurai/claude-code-subagents) (MIT)
+- [wshobson/agents](https://github.com/wshobson/agents) (MIT)
+- [VoltAgent/awesome-claude-code-subagents](https://github.com/VoltAgent/awesome-claude-code-subagents) (MIT)
+- [rahulvrane/awesome-claude-agents](https://github.com/rahulvrane/awesome-claude-agents) (MIT)
+- [mrgoonie/claudekit-skills](https://github.com/mrgoonie/claudekit-skills) (MIT)
+- [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) (MIT)
+
+**Disclaimer:** Not affiliated with or endorsed by Anthropic PBC. Claude Code is a product of Anthropic.
 
 ## Support
 
 For issues, questions, or template suggestions:
+
 - Check `vibery list` for available templates
 - Run `vibery search <query>` to find templates
 - See docs/ for detailed documentation

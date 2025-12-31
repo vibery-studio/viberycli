@@ -1,0 +1,16 @@
+{
+  "id": "saas-monetization",
+  "name": "SaaS Monetization",
+  "version": "1.0.0",
+  "description": "Integrate payments and subscriptions with Stripe and Polar for your SaaS",
+  "category": "backend",
+  "tags": ["stripe", "payments", "saas", "monetization", "subscriptions"],
+  "composable": [],
+  "contents": {
+    "agents": ["payment-integration.md", "stripe-pro.md"],
+    "commands": ["add-authentication-system.md"],
+    "skills": ["better-auth"],
+    "hooks": [],
+    "mcps": ["stripe.json"]
+  }
+}

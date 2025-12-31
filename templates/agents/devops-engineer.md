@@ -1,5 +1,5 @@
 ---
-name: docker-expert
+name: devops-engineer
 description: Expert in all aspects of Docker, including containerization, image creation, and orchestration.
 model: claude-sonnet-4-20250514
 ---

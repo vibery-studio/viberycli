@@ -1,0 +1,23 @@
+<!-- VIBERY-KIT:astro-production:v1.0.0 -->
+## Astro Production Kit
+
+### Stack Context
+- **Framework:** Astro 5 (SSG/SSR hybrid)
+- **Deployment:** Cloudflare Pages
+- **Performance:** Core Web Vitals optimized, Islands architecture
+
+### Guidelines
+- Prefer static generation (`prerender: true`) unless dynamic needed
+- Use View Transitions for smooth navigation
+- Implement Content Collections for type-safe content
+- Keep client JS minimal (Islands architecture)
+
+### Available Agents
+- `astro-expert` - Astro architecture, routing, integrations
+
+### Available Commands
+- `/astro-build` - Production build with checks
+- `/lighthouse-audit` - Performance audit
+
+<!-- /VIBERY-KIT:astro-production -->
+

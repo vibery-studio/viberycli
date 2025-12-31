@@ -1,5 +1,5 @@
 ---
-name: mongodb-expert
+name: database-architect
 description: Master MongoDB operations, schema design, performance optimization, and data modeling. Handles indexing, aggregations, and replication. Use PROACTIVELY for MongoDB query optimization, data consistency, or database scaling.
 model: claude-sonnet-4-20250514
 ---

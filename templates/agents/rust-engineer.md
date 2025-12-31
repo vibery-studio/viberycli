@@ -1,5 +1,5 @@
 ---
-name: rust-expert
+name: rust-engineer
 description: Expert in writing idiomatic Rust code with focus on safety, concurrency, and performance. Masters ownership, borrowing concepts, and Rust's type system. Use PROACTIVELY for Rust optimization and code safety checks.
 model: claude-sonnet-4-20250514
 ---

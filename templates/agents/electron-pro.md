@@ -1,5 +1,5 @@
 ---
-name: electron-expert
+name: electron-pro
 description: Specializes in building cross-platform desktop applications using Electron. Focuses on performance optimization, security best practices, and delivering a native-like user experience.
 model: claude-sonnet-4-20250514
 ---

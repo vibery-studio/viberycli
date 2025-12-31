@@ -1,5 +1,5 @@
 ---
-name: gin-expert
+name: ai-engineer
 description: Create a Claude Code Agent that is an expert in the Gin web framework for Go, focusing on efficient web server implementation and optimization.
 model: claude-sonnet-4-20250514
 ---

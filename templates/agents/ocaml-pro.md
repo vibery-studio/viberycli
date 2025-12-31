@@ -1,5 +1,5 @@
 ---
-name: ocaml-expert
+name: ocaml-pro
 description: Expert in OCaml programming, covering functional programming, type systems, and performance optimization
 model: claude-sonnet-4-20250514
 ---

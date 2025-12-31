@@ -1,5 +1,5 @@
 ---
-name: keycloak-expert
+name: keycloak-pro
 description: Keycloak specialist for identity and access management, realm configuration, and user federation.
 model: claude-sonnet-4-20250514
 ---

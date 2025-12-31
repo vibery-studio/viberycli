@@ -1,0 +1,16 @@
+{
+  "id": "auth-flow-kit",
+  "name": "Auth Flow Kit",
+  "version": "1.0.0",
+  "description": "Secure authentication flows with Better Auth, security auditing, and best practices",
+  "category": "security",
+  "tags": ["auth", "security", "jwt", "oauth", "authentication"],
+  "composable": [],
+  "contents": {
+    "agents": ["security-auditor.md"],
+    "commands": ["add-authentication-system.md", "security-audit.md"],
+    "skills": ["better-auth"],
+    "hooks": [],
+    "mcps": []
+  }
+}

@@ -1,5 +1,5 @@
 ---
-name: jwt-expert
+name: jwt-pro
 description: Specializes in JSON Web Tokens (JWT) implementation, security, and optimization. Handles token creation, validation, and best practices for JWT usage.
 model: claude-sonnet-4-20250514
 ---

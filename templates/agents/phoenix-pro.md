@@ -1,5 +1,5 @@
 ---
-name: phoenix-expert
+name: phoenix-pro
 description: Expert in Phoenix framework, optimizing web applications, and ensuring best practices. Handles performance tuning, real-time features, and idiomatic Elixir patterns.
 model: claude-sonnet-4-20250514
 ---

@@ -1,5 +1,5 @@
 ---
-name: aspnet-core-expert
+name: aspnet-core-pro
 description: Expert in ASP.NET Core web application development, optimization, and best practices.
 model: claude-sonnet-4-20250514
 ---

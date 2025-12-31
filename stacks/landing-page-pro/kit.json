@@ -1,0 +1,16 @@
+{
+  "id": "landing-page-pro",
+  "name": "Landing Page Pro",
+  "version": "1.0.0",
+  "description": "Ship beautiful landing pages fast with Next.js, Tailwind, and SEO optimization",
+  "category": "frontend",
+  "tags": ["nextjs", "tailwind", "landing-page", "seo", "marketing"],
+  "composable": [],
+  "contents": {
+    "agents": ["nextjs-developer.md", "tailwind-pro.md", "seo-specialist.md"],
+    "commands": [],
+    "skills": ["ui-ux-pro-max"],
+    "hooks": [],
+    "mcps": []
+  }
+}

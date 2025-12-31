@@ -1,12 +1,12 @@
-const fs = require('fs-extra');
-const path = require('path');
-const logger = require('../utils/logger');
-const templateDownloader = require('./template-downloader');
+const fs = require("fs-extra");
+const path = require("path");
+const logger = require("../utils/logger");
+const templateDownloader = require("./template-downloader");
 
 class Installer {
   constructor() {
     // Path to templates folder (bundled with CLI package)
-    this.templatesDir = path.join(__dirname, '../../templates');
+    this.templatesDir = path.join(__dirname, "../../templates");
     this.offlineMode = false;
   }
 
@@ -20,17 +20,17 @@ class Installer {
   /**
    * Get the target directory for a template type
    */
-  getTargetDir(type, targetDir = '.') {
+  getTargetDir(type, targetDir = ".") {
     const typeToDir = {
-      agent: '.claude/agents',
-      command: '.claude/commands',
-      mcp: '.claude/mcps',
-      setting: '.claude',
-      hook: '.claude',
-      skill: '.claude/skills'
+      agent: ".claude/agents",
+      command: ".claude/commands",
+      mcp: ".claude/mcps",
+      setting: ".claude/settings",
+      hook: ".claude/hooks",
+      skill: ".claude/skills",
     };
 
-    const subDir = typeToDir[type] || '.claude';
+    const subDir = typeToDir[type] || ".claude";
     return path.join(targetDir, subDir);
   }
 
@@ -39,22 +39,29 @@ class Installer {
    */
   getSourcePath(template) {
     const type = template.type;
-    const typeDir = type.endsWith('s') ? type : `${type}s`;
-    return path.join(this.templatesDir, typeDir, template.path || template.name);
+    const typeDir = type.endsWith("s") ? type : `${type}s`;
+    return path.join(
+      this.templatesDir,
+      typeDir,
+      template.path || template.name,
+    );
   }
 
   /**
    * Install a template
    */
-  async install(template, targetDir = '.', onProgress = null) {
+  async install(template, targetDir = ".", onProgress = null) {
     const targetDirPath = this.getTargetDir(template.type, targetDir);
 
     // Determine target filename
     let targetFileName = template.name;
-    if (!targetFileName.endsWith('.md') && !targetFileName.endsWith('.json')) {
-      targetFileName = template.type === 'mcp' || template.type === 'setting' || template.type === 'hook'
-        ? `${template.name}.json`
-        : `${template.name}.md`;
+    if (!targetFileName.endsWith(".md") && !targetFileName.endsWith(".json")) {
+      targetFileName =
+        template.type === "mcp" ||
+        template.type === "setting" ||
+        template.type === "hook"
+          ? `${template.name}.json`
+          : `${template.name}.md`;
     }
 
     const targetPath = path.join(targetDirPath, targetFileName);
@@ -66,14 +73,14 @@ class Installer {
           const result = await templateDownloader.downloadAndExtract(
             template,
             targetPath,
-            onProgress
+            onProgress,
           );
 
           if (result.success) {
             return {
               success: true,
               path: targetPath,
-              source: 'remote'
+              source: "remote",
             };
           }
         } catch (error) {
@@ -105,12 +112,12 @@ class Installer {
       return {
         success: true,
         path: targetPath,
-        source: 'bundled'
+        source: "bundled",
       };
     } catch (error) {
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -118,8 +125,12 @@ class Installer {
   /**
    * Install a skill (directory)
    */
-  async installSkill(template, targetDir = '.', onProgress = null) {
-    const targetPath = path.join(targetDir, '.claude/skills', template.name.replace(/\.(md|json)$/, ''));
+  async installSkill(template, targetDir = ".", onProgress = null) {
+    const targetPath = path.join(
+      targetDir,
+      ".claude/skills",
+      template.name.replace(/\.(md|json)$/, ""),
+    );
 
     try {
       // Try remote download first (unless offline mode)
@@ -127,14 +138,14 @@ class Installer {
         try {
           const result = await templateDownloader.extractDirectory(
             await templateDownloader.download(template, onProgress),
-            targetPath
+            targetPath,
           );
 
           if (result.success) {
             return {
               success: true,
               path: targetPath,
-              source: 'remote'
+              source: "remote",
             };
           }
         } catch (error) {
@@ -159,12 +170,12 @@ class Installer {
       return {
         success: true,
         path: targetPath,
-        source: 'bundled'
+        source: "bundled",
       };
     } catch (error) {
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -172,12 +183,12 @@ class Installer {
   /**
    * Install a stack (bundle of templates)
    */
-  async installStack(stack, registry, targetDir = '.') {
+  async installStack(stack, registry, targetDir = ".") {
     const results = {
       success: true,
       installed: [],
       failed: [],
-      stack: stack
+      stack: stack,
     };
 
     for (const item of stack.templates) {
@@ -185,17 +196,20 @@ class Installer {
       const template = await registry.findTemplate(item.name, item.type);
 
       if (!template) {
-        results.failed.push({ ...item, error: 'Template not found in registry' });
+        results.failed.push({
+          ...item,
+          error: "Template not found in registry",
+        });
         continue;
       }
 
       // Install based on type
       let result;
       switch (template.type) {
-        case 'mcp':
+        case "mcp":
           result = await this.installMCP(template, targetDir);
           break;
-        case 'skill':
+        case "skill":
           result = await this.installSkill(template, targetDir);
           break;
         default:
@@ -216,9 +230,9 @@ class Installer {
   /**
    * Install MCP to .mcp.json (merge)
    */
-  async installMCP(template, targetDir = '.') {
+  async installMCP(template, targetDir = ".") {
     const sourcePath = this.getSourcePath(template);
-    const mcpJsonPath = path.join(targetDir, '.mcp.json');
+    const mcpJsonPath = path.join(targetDir, ".mcp.json");
 
     try {
       // Read source MCP config
@@ -234,7 +248,7 @@ class Installer {
       }
 
       // Merge MCP config
-      const mcpName = template.name.replace('.json', '');
+      const mcpName = template.name.replace(".json", "");
       if (sourceConfig.mcpServers) {
         // Source has mcpServers object
         Object.assign(targetConfig.mcpServers, sourceConfig.mcpServers);
@@ -249,12 +263,12 @@ class Installer {
       return {
         success: true,
         path: mcpJsonPath,
-        source: sourcePath
+        source: sourcePath,
       };
     } catch (error) {
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }

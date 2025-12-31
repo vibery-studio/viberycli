@@ -1,0 +1,24 @@
+{
+  "id": "frontend-dev-stack",
+  "name": "Frontend Development Stack",
+  "version": "1.0.0",
+  "description": "Complete frontend development kit with UI/UX design intelligence, React/TypeScript patterns, and shadcn/ui + Tailwind styling",
+  "category": "frontend",
+  "composable": ["supabase-stack", "stripe-payments", "better-auth"],
+  "contents": {
+    "skills": [
+      "ui-ux-pro-max",
+      "frontend-development",
+      "ui-styling",
+      "frontend-design-pro"
+    ],
+    "agents": ["frontend-expert.md"],
+    "commands": ["ui-review.md", "component-gen.md"],
+    "hooks": ["prettier-format.json"]
+  },
+  "requires": {
+    "tools": ["node", "python3"],
+    "packages": ["tailwindcss", "react"]
+  },
+  "tags": ["react", "typescript", "tailwind", "shadcn", "ui", "ux", "design"]
+}

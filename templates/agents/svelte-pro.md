@@ -1,5 +1,5 @@
 ---
-name: svelte-expert
+name: svelte-pro
 description: Master Svelte.js development with a focus on building performant, maintainable, and idiomatic Svelte applications. Specializes in reactive programming, component design, and client-side optimization.
 model: claude-sonnet-4-20250514
 ---

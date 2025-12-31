@@ -7,6 +7,7 @@ Complete documentation for the Vibery CLI project. All files optimized for quick
 ## Documentation Structure
 
 ### Quick Start
+
 - **[../README.md](../README.md)** (280 lines)
   - User-facing guide
   - Installation and usage examples
@@ -15,6 +16,7 @@ Complete documentation for the Vibery CLI project. All files optimized for quick
   - Quick troubleshooting
 
 ### For Product Managers & Architects
+
 - **[project-overview-pdr.md](project-overview-pdr.md)** (229 lines)
   - Project vision and goals
   - Functional requirements (F1-F3)
@@ -24,6 +26,7 @@ Complete documentation for the Vibery CLI project. All files optimized for quick
   - Deployment and scaling considerations
 
 ### For Developers
+
 - **[code-standards.md](code-standards.md)** (379 lines)
   - Architecture patterns (singleton, dispatch, async)
   - Directory structure and organization
@@ -35,6 +38,7 @@ Complete documentation for the Vibery CLI project. All files optimized for quick
   - Development practices
 
 ### For System Designers
+
 - **[system-architecture.md](system-architecture.md)** (476 lines)
   - ASCII architecture diagram
   - Component details and responsibilities
@@ -46,6 +50,7 @@ Complete documentation for the Vibery CLI project. All files optimized for quick
   - Testing strategy
 
 ### For Onboarding
+
 - **[codebase-summary.md](codebase-summary.md)** (429 lines)
   - Complete file breakdown (all 12 files)
   - Code statistics and metrics
@@ -114,18 +119,19 @@ Complete documentation for the Vibery CLI project. All files optimized for quick
 
 ## Documentation Statistics
 
-| Document | Lines | Focus | Audience |
-|----------|-------|-------|----------|
-| project-overview-pdr.md | 229 | Vision, requirements, PDR | Architects, PMs |
-| code-standards.md | 379 | Patterns, conventions | Developers |
-| system-architecture.md | 476 | Design, diagrams | Designers, leads |
-| codebase-summary.md | 429 | File breakdown, execution | Onboarding, reviewers |
-| ../README.md | 258 | Usage, examples | End users |
-| **TOTAL** | **1,771** | Comprehensive | All audiences |
+| Document                | Lines     | Focus                     | Audience              |
+| ----------------------- | --------- | ------------------------- | --------------------- |
+| project-overview-pdr.md | 229       | Vision, requirements, PDR | Architects, PMs       |
+| code-standards.md       | 379       | Patterns, conventions     | Developers            |
+| system-architecture.md  | 476       | Design, diagrams          | Designers, leads      |
+| codebase-summary.md     | 429       | File breakdown, execution | Onboarding, reviewers |
+| ../README.md            | 258       | Usage, examples           | End users             |
+| **TOTAL**               | **1,771** | Comprehensive             | All audiences         |
 
 ## Key Concepts
 
 ### Template Types
+
 ```
 Agent (🤖)     → .claude/agents/
 Command (⚡)   → .claude/commands/
@@ -136,16 +142,19 @@ Skill (🎨)     → .claude/skills/
 ```
 
 ### Core Services
+
 - **Registry** - Loads and searches 600+ templates (singleton)
 - **Installer** - Type-specific file operations (singleton)
 - **Logger** - Terminal styling and output (utility)
 
 ### Main Commands
+
 - `vibery install [template]` - Install templates
 - `vibery list [-t type]` - List templates
 - `vibery search <query>` - Search templates
 
 ### Key Files
+
 ```
 src/commands/
 ├── install.js      Install handler (109 lines)
@@ -195,11 +204,13 @@ src/utils/
 ## Related Documentation
 
 **Parent Project:** [/Applications/MAMP/htdocs/vibe-templates/](../../../vibe-templates/)
+
 - Website documentation (Astro + Vue)
 - Template standards
 - Project-wide CLAUDE.md
 
 **CLI Root:** [/Applications/MAMP/htdocs/vibe-templates/cli/](../)
+
 - README.md - User guide
 - package.json - Dependencies
 - registry.json - Template catalog

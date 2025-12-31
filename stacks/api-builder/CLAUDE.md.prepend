@@ -1,0 +1,10 @@
+<!-- VIBERY-KIT:api-builder:v1.0.0 -->
+## API Builder
+
+Design, build, and document REST APIs with best practices
+
+### Included
+- Agents: api-designer, api-documenter, backend-developer
+- Skills: backend-development
+- Commands: doc-api, generate-api-documentation
+<!-- /VIBERY-KIT:api-builder -->

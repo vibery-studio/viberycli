@@ -1,5 +1,5 @@
 ---
-name: clojure-expert
+name: clojure-pro
 description: Master Clojure development with a focus on functional programming, immutability, concurrency, and Lisp macros. Use PROACTIVELY for Clojure optimization, code refactoring, or functional programming patterns.
 model: claude-sonnet-4-20250514
 ---

@@ -1,15 +1,16 @@
-const https = require('https');
-const fs = require('fs-extra');
-const path = require('path');
-const cacheManager = require('./cache-manager');
+const https = require("https");
+const fs = require("fs-extra");
+const path = require("path");
+const cacheManager = require("./cache-manager");
 
 class RemoteRegistry {
   constructor() {
     // Default to GitHub Releases, can be overridden by env var
-    this.baseUrl = process.env.VIBERY_REGISTRY_URL ||
-      'https://github.com/vibery-studio/templates/releases/latest/download';
+    this.baseUrl =
+      process.env.VIBERY_REGISTRY_URL ||
+      "https://github.com/vibery-studio/templates/releases/latest/download";
     this.registryUrl = `${this.baseUrl}/registry.json`;
-    this.bundledRegistryPath = path.join(__dirname, '../../registry.json');
+    this.bundledRegistryPath = path.join(__dirname, "../../registry.json");
   }
 
   /**
@@ -50,23 +51,27 @@ class RemoteRegistry {
    */
   async fetchRegistryFromRemote() {
     return new Promise((resolve, reject) => {
-      https.get(this.registryUrl, (res) => {
-        if (res.statusCode !== 200) {
-          reject(new Error(`Failed to fetch registry: HTTP ${res.statusCode}`));
-          return;
-        }
-
-        let data = '';
-        res.on('data', chunk => data += chunk);
-        res.on('end', () => {
-          try {
-            const parsed = JSON.parse(data);
-            resolve(parsed);
-          } catch (error) {
-            reject(new Error('Invalid JSON in registry'));
+      https
+        .get(this.registryUrl, (res) => {
+          if (res.statusCode !== 200) {
+            reject(
+              new Error(`Failed to fetch registry: HTTP ${res.statusCode}`),
+            );
+            return;
           }
-        });
-      }).on('error', reject);
+
+          let data = "";
+          res.on("data", (chunk) => (data += chunk));
+          res.on("end", () => {
+            try {
+              const parsed = JSON.parse(data);
+              resolve(parsed);
+            } catch (error) {
+              reject(new Error("Invalid JSON in registry"));
+            }
+          });
+        })
+        .on("error", reject);
     });
   }
 
@@ -94,7 +99,7 @@ class RemoteRegistry {
    */
   getArchiveUrl(type, name) {
     // Remove file extension from name
-    const cleanName = name.replace(/\.(md|json)$/, '');
+    const cleanName = name.replace(/\.(md|json)$/, "");
     return `${this.baseUrl}/${type}--${cleanName}.tar.gz`;
   }
 }

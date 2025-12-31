@@ -1,0 +1,16 @@
+{
+  "id": "api-builder",
+  "name": "API Builder",
+  "version": "1.0.0",
+  "description": "Design, build, and document REST APIs with best practices",
+  "category": "backend",
+  "tags": ["api", "rest", "backend", "documentation"],
+  "composable": [],
+  "contents": {
+    "agents": ["api-designer.md", "api-documenter.md", "backend-developer.md"],
+    "commands": ["doc-api.md", "generate-api-documentation.md"],
+    "skills": ["backend-development"],
+    "hooks": [],
+    "mcps": []
+  }
+}

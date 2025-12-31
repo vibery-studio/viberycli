@@ -1,0 +1,16 @@
+{
+  "id": "vue-complete",
+  "name": "Vue Complete",
+  "version": "1.0.0",
+  "description": "Full Vue.js development stack with styling and best practices",
+  "category": "frontend",
+  "tags": ["vue", "vuejs", "frontend", "tailwind"],
+  "composable": [],
+  "contents": {
+    "agents": ["vue-expert.md", "tailwind-pro.md"],
+    "commands": [],
+    "skills": ["ui-styling", "frontend-development"],
+    "hooks": [],
+    "mcps": []
+  }
+}

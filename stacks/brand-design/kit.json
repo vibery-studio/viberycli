@@ -1,0 +1,16 @@
+{
+  "id": "brand-design",
+  "name": "Brand & Design",
+  "version": "1.0.0",
+  "description": "Create consistent brand identity and design systems",
+  "category": "design",
+  "tags": ["design", "branding", "ui", "design-system", "tailwind"],
+  "composable": [],
+  "contents": {
+    "agents": ["tailwind-pro.md"],
+    "commands": [],
+    "skills": ["ui-ux-pro-max", "ui-styling"],
+    "hooks": [],
+    "mcps": []
+  }
+}

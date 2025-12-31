@@ -1,0 +1,10 @@
+<!-- VIBERY-KIT:auth-flow-kit:v1.0.0 -->
+## Auth Flow Kit
+
+Secure authentication flows with Better Auth, security auditing, and best practices
+
+### Included
+- Agents: security-auditor
+- Skills: better-auth
+- Commands: add-authentication-system, security-audit
+<!-- /VIBERY-KIT:auth-flow-kit -->

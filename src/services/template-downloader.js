@@ -1,10 +1,10 @@
-const https = require('https');
-const fs = require('fs-extra');
-const path = require('path');
-const { pipeline } = require('stream/promises');
-const { Readable } = require('stream');
-const cacheManager = require('./cache-manager');
-const remoteRegistry = require('./remote-registry');
+const https = require("https");
+const fs = require("fs-extra");
+const path = require("path");
+const { pipeline } = require("stream/promises");
+const { Readable } = require("stream");
+const cacheManager = require("./cache-manager");
+const remoteRegistry = require("./remote-registry");
 
 class TemplateDownloader {
   /**
@@ -15,7 +15,7 @@ class TemplateDownloader {
    */
   async download(template, onProgress = null) {
     const type = template.type;
-    const name = template.name.replace(/\.(md|json)$/, '');
+    const name = template.name.replace(/\.(md|json)$/, "");
 
     // Check cache first
     if (await cacheManager.hasArchive(type, name)) {
@@ -39,7 +39,9 @@ class TemplateDownloader {
       const handleResponse = (res) => {
         if (res.statusCode === 302 || res.statusCode === 301) {
           // Follow redirect
-          return https.get(res.headers.location, handleResponse).on('error', reject);
+          return https
+            .get(res.headers.location, handleResponse)
+            .on("error", reject);
         }
 
         if (res.statusCode !== 200) {
@@ -47,11 +49,11 @@ class TemplateDownloader {
           return;
         }
 
-        const totalBytes = parseInt(res.headers['content-length'] || '0', 10);
+        const totalBytes = parseInt(res.headers["content-length"] || "0", 10);
         let downloadedBytes = 0;
         const chunks = [];
 
-        res.on('data', (chunk) => {
+        res.on("data", (chunk) => {
           chunks.push(chunk);
           downloadedBytes += chunk.length;
           if (onProgress && totalBytes > 0) {
@@ -59,14 +61,14 @@ class TemplateDownloader {
           }
         });
 
-        res.on('end', () => {
+        res.on("end", () => {
           resolve(Buffer.concat(chunks));
         });
 
-        res.on('error', reject);
+        res.on("error", reject);
       };
 
-      https.get(url, handleResponse).on('error', reject);
+      https.get(url, handleResponse).on("error", reject);
     });
   }
 
@@ -77,7 +79,7 @@ class TemplateDownloader {
   async extract(archivePath, targetPath) {
     try {
       // Try to use tar package
-      const tar = require('tar');
+      const tar = require("tar");
 
       await fs.ensureDir(targetPath);
 
@@ -85,7 +87,7 @@ class TemplateDownloader {
       await tar.extract({
         file: archivePath,
         cwd: targetPath,
-        strip: 1 // Strip the first directory level
+        strip: 1, // Strip the first directory level
       });
 
       return { success: true, path: targetPath };
@@ -103,7 +105,11 @@ class TemplateDownloader {
       const archivePath = await this.download(template, onProgress);
 
       // For single-file templates, we need to read the archive and extract the file
-      const result = await this.extractSingleFile(archivePath, targetPath, template);
+      const result = await this.extractSingleFile(
+        archivePath,
+        targetPath,
+        template,
+      );
 
       return result;
     } catch (error) {
@@ -116,21 +122,21 @@ class TemplateDownloader {
    */
   async extractSingleFile(archivePath, targetPath, template) {
     try {
-      const tar = require('tar');
-      const tempDir = path.join(require('os').tmpdir(), `vibery-${Date.now()}`);
+      const tar = require("tar");
+      const tempDir = path.join(require("os").tmpdir(), `vibery-${Date.now()}`);
 
       await fs.ensureDir(tempDir);
 
       // Extract to temp directory
       await tar.extract({
         file: archivePath,
-        cwd: tempDir
+        cwd: tempDir,
       });
 
       // Find the extracted file
       const files = await fs.readdir(tempDir);
       if (files.length === 0) {
-        throw new Error('No files in archive');
+        throw new Error("No files in archive");
       }
 
       // Determine the actual file name in the archive
@@ -153,7 +159,7 @@ class TemplateDownloader {
       }
 
       if (!sourceFile) {
-        throw new Error('Could not find file in archive');
+        throw new Error("Could not find file in archive");
       }
 
       // Ensure target directory exists
@@ -176,7 +182,7 @@ class TemplateDownloader {
    */
   async extractDirectory(archivePath, targetPath) {
     try {
-      const tar = require('tar');
+      const tar = require("tar");
 
       await fs.ensureDir(targetPath);
 
@@ -184,7 +190,7 @@ class TemplateDownloader {
       await tar.extract({
         file: archivePath,
         cwd: targetPath,
-        strip: 1 // Strip the first directory level to get the content directly
+        strip: 1, // Strip the first directory level to get the content directly
       });
 
       return { success: true, path: targetPath };

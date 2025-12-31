@@ -27,22 +27,26 @@ cli/
 ## File Breakdown
 
 ### `bin/vibery.js`
+
 - **Purpose:** CLI entry point, command registration
 - **Technology:** Commander.js v11.1.0
 - **Exports:** Parses args and dispatches to command handlers
 - **Size:** ~50 lines
 
 **Key Functions:**
+
 - Setup program (name, version, description)
 - Register install/list/search commands with options
 - Route to appropriate command handler
 
 ### `src/commands/install.js`
+
 - **Purpose:** Installation command handler
 - **Size:** ~109 lines
 - **Async:** Yes
 
 **Responsibilities:**
+
 1. Parse template name (positional or type option)
 2. Find template in registry
 3. Route to type-specific installer method
@@ -50,22 +54,26 @@ cli/
 5. Show usage hints
 
 **Key Functions:**
+
 ```javascript
 async installCommand(templateName, options)  // Main handler
 function showUsageHint(template)              // Post-install guidance
 ```
 
 **Type Routing:**
+
 - MCP → `installer.installMCP()`
 - Skill → `installer.installSkill()`
 - Other → `installer.install()`
 
 ### `src/commands/list.js`
+
 - **Purpose:** List available templates
 - **Size:** ~74 lines
 - **Async:** Yes
 
 **Responsibilities:**
+
 1. Get all templates or filter by type
 2. Get template counts
 3. Display grouped by type with icons
@@ -74,11 +82,13 @@ function showUsageHint(template)              // Post-install guidance
 **Output:** Color-coded list with type icons and descriptions.
 
 ### `src/commands/search.js`
+
 - **Purpose:** Full-text search templates
 - **Size:** ~67 lines
 - **Async:** Yes
 
 **Responsibilities:**
+
 1. Validate query provided
 2. Search registry (name + description)
 3. Group results by type
@@ -87,11 +97,13 @@ function showUsageHint(template)              // Post-install guidance
 **Search Logic:** Case-insensitive includes() matching.
 
 ### `src/services/registry.js`
+
 - **Purpose:** Template catalog (singleton)
 - **Size:** ~91 lines
 - **Pattern:** Singleton with lazy loading
 
 **Responsibilities:**
+
 1. Load registry.json on first call
 2. Cache data in memory
 3. Query by type or name
@@ -99,6 +111,7 @@ function showUsageHint(template)              // Post-install guidance
 5. Return template counts
 
 **Key Methods:**
+
 ```javascript
 async load()                    // Lazy load + cache
 async getTemplates(type)        // Get all/filtered
@@ -108,6 +121,7 @@ async getCounts()               // Count per type
 ```
 
 **Registry Structure:**
+
 ```json
 {
   "version": "1.0.0",
@@ -125,11 +139,13 @@ async getCounts()               // Count per type
 ```
 
 ### `src/services/installer.js`
+
 - **Purpose:** File system operations (singleton)
 - **Size:** ~168 lines
 - **Pattern:** Singleton
 
 **Responsibilities:**
+
 1. Map template type to installation path
 2. Build source/target paths
 3. Copy individual files
@@ -137,6 +153,7 @@ async getCounts()               // Count per type
 5. Merge MCP configs
 
 **Key Methods:**
+
 ```javascript
 getTargetDir(type, targetDir)       // Type → .claude path
 getSourcePath(template)              // Build source path
@@ -146,6 +163,7 @@ async installMCP(template, targetDir)    // Merge JSON
 ```
 
 **Installation Paths:**
+
 ```
 agent → .claude/agents/*.md
 command → .claude/commands/*.md
@@ -156,30 +174,34 @@ hook → .claude/*.json
 ```
 
 **MCP Special Logic:**
+
 - Read source MCP config (single server or mcpServers object)
 - Read or initialize target .mcp.json
 - Merge into `mcpServers` key
 - Write back to target
 
 ### `src/utils/logger.js`
+
 - **Purpose:** Terminal styling and output
 - **Size:** ~57 lines
 - **Dependency:** chalk v4.1.2
 
 **Methods:**
+
 ```javascript
-logger.info(msg)              // ℹ blue
-logger.success(msg)           // ✓ green
-logger.error(msg)             // ✗ red
-logger.warn(msg)              // ⚠ yellow
-logger.title(msg)             // Bold cyan
-logger.subtitle(msg)          // Gray
-logger.template(name, type, desc)  // Type-colored
-logger.command(cmd)           // Gray $
-logger.box(title, content)    // Box drawing
+logger.info(msg); // ℹ blue
+logger.success(msg); // ✓ green
+logger.error(msg); // ✗ red
+logger.warn(msg); // ⚠ yellow
+logger.title(msg); // Bold cyan
+logger.subtitle(msg); // Gray
+logger.template(name, type, desc); // Type-colored
+logger.command(cmd); // Gray $
+logger.box(title, content); // Box drawing
 ```
 
 **Icon Mapping:**
+
 ```javascript
 {
   agent: '🤖',
@@ -192,6 +214,7 @@ logger.box(title, content)    // Box drawing
 ```
 
 ### `registry.json`
+
 - **Purpose:** Template catalog
 - **Size:** ~2320 lines
 - **Structure:** JSON with templates grouped by type
@@ -205,6 +228,7 @@ logger.box(title, content)    // Box drawing
   - 0 skills (placeholder)
 
 **Entry Format:**
+
 ```json
 {
   "name": "template-name",
@@ -214,17 +238,20 @@ logger.box(title, content)    // Box drawing
 ```
 
 ### `package.json`
+
 - **Purpose:** Node.js package metadata
 - **Version:** 1.0.0
 - **Bin:** `vibery` → `bin/vibery.js`
 
 **Dependencies:**
+
 - chalk ^4.1.2 (Terminal colors)
 - commander ^11.1.0 (CLI parsing)
 - fs-extra ^11.2.0 (File operations)
 - ora ^5.4.1 (Loading spinners)
 
 **Scripts:**
+
 ```json
 "start": "node bin/vibery.js"  // Local testing
 "test": "echo \"Error: no test specified\""
@@ -232,14 +259,14 @@ logger.box(title, content)    // Box drawing
 
 ## Code Statistics
 
-| Metric | Value |
-|--------|-------|
-| Total files | 12 |
-| Total tokens | 15,770 |
-| Total chars | 63,241 |
-| Commands | 3 (install, list, search) |
-| Services | 2 (registry, installer) |
-| Templates | 600+ |
+| Metric       | Value                        |
+| ------------ | ---------------------------- |
+| Total files  | 12                           |
+| Total tokens | 15,770                       |
+| Total chars  | 63,241                       |
+| Commands     | 3 (install, list, search)    |
+| Services     | 2 (registry, installer)      |
+| Templates    | 600+                         |
 | Largest file | registry.json (9,840 tokens) |
 
 ## Execution Flow
@@ -279,6 +306,7 @@ logger.box(title, content)    // Box drawing
 **Minimal, stateless design:**
 
 ### Registry State
+
 ```javascript
 {
   registryPath: '/absolute/path/to/registry.json',
@@ -287,16 +315,19 @@ logger.box(title, content)    // Box drawing
 ```
 
 ### Installer State
+
 ```javascript
 {
-  templatesDir: '/repo/templates'  // Configured at init
+  templatesDir: "/repo/templates"; // Configured at init
 }
 ```
 
 ### Logger State
+
 None (pure functions, no state).
 
 ### Commands State
+
 None (ephemeral, process-scoped).
 
 ## Dependencies & Version Pinning
@@ -329,6 +360,7 @@ try {
 ```
 
 **Error Scenarios:**
+
 1. Template not found → Info message + suggestion
 2. Source file missing → Error with path
 3. Permission denied → Error with path
@@ -337,14 +369,14 @@ try {
 
 ## Performance Profile
 
-| Operation | Typical Time | Bottleneck |
-|-----------|--------------|-----------|
-| Registry load | ~50ms | fs.readJson |
-| Find template | ~5ms | Linear array search |
-| Search | ~30ms | Linear iteration |
-| Install file | <500ms | Disk I/O |
-| Install skill | 1-5s | Directory size |
-| MCP merge | ~10ms | JSON read/write |
+| Operation     | Typical Time | Bottleneck          |
+| ------------- | ------------ | ------------------- |
+| Registry load | ~50ms        | fs.readJson         |
+| Find template | ~5ms         | Linear array search |
+| Search        | ~30ms        | Linear iteration    |
+| Install file  | <500ms       | Disk I/O            |
+| Install skill | 1-5s         | Directory size      |
+| MCP merge     | ~10ms        | JSON read/write     |
 
 ## Security Posture
 
@@ -357,6 +389,7 @@ try {
 
 **Current:** 0 tests
 **Gaps:**
+
 - Unit tests for services
 - Integration tests for commands
 - E2E tests for all template types
@@ -364,12 +397,14 @@ try {
 ## Documentation Files
 
 ### In `/docs/`:
+
 - `project-overview-pdr.md` - Vision, requirements, PDR
 - `code-standards.md` - Coding conventions, patterns
 - `system-architecture.md` - Architecture diagrams, data flows
 - `codebase-summary.md` - This file
 
 ### In root:
+
 - `README.md` - User-facing documentation
 - `CLAUDE.md` - CI/CD and development workflows
 
@@ -378,6 +413,7 @@ try {
 **No build process:** Pure Node.js, no compilation.
 
 **Distribution:** npm package
+
 ```bash
 npm publish  # Published to npm registry
 npm install -g vibery  # Users install globally
@@ -395,12 +431,14 @@ npx vibery [cmd]  # One-off execution
 ## Maintainability Notes
 
 **Strengths:**
+
 - Modular (commands, services, utils)
 - Minimal dependencies
 - Clear separation of concerns
 - Well-commented code
 
 **Improvement Opportunities:**
+
 - Add TypeScript for type safety
 - Implement unit/integration tests
 - Extract configuration to file
@@ -409,11 +447,13 @@ npx vibery [cmd]  # One-off execution
 ## Related Ecosystem
 
 **Parent Project:** Vibery Kits (`/Applications/MAMP/htdocs/vibe-templates/`)
+
 - Website: Astro + Vue (template discovery)
 - CLI: This project (template installation)
 - Templates: Stored in `/templates/` (agents, commands, etc.)
 
 **Workflow:**
+
 1. User discovers template on website
 2. Copies template name
 3. Runs `vibery install <template-name>`

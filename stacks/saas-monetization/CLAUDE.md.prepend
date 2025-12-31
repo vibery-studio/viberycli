@@ -1,0 +1,10 @@
+<!-- VIBERY-KIT:saas-monetization:v1.0.0 -->
+## SaaS Monetization
+
+Integrate payments and subscriptions with Stripe and Polar for your SaaS
+
+### Included
+- Agents: payment-integration, stripe-pro
+- Skills: better-auth
+- Commands: add-authentication-system
+<!-- /VIBERY-KIT:saas-monetization -->

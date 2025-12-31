@@ -1,5 +1,5 @@
 ---
-name: terraform-expert
+name: cloud-architect
 description: Expert in infrastructure-as-code using Terraform, specializing in efficient and reliable infrastructure provisioning and management.
 model: claude-sonnet-4-20250514
 ---

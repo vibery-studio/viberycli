@@ -1,5 +1,5 @@
 ---
-name: flyway-expert
+name: flyway-pro
 description: Master Flyway for database migrations, versioning, and schema management. Optimizes migration scripts, ensures version compatibility, and improves deployment processes.
 model: claude-sonnet-4-20250514
 ---

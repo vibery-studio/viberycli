@@ -1,11 +1,11 @@
-const logger = require('../utils/logger');
-const registry = require('../services/registry');
+const logger = require("../utils/logger");
+const registry = require("../services/registry");
 
 async function searchCommand(query, options) {
   try {
     if (!query || query.trim().length === 0) {
-      logger.error('Please provide a search query');
-      logger.info('Usage: vibe search <query>');
+      logger.error("Please provide a search query");
+      logger.info("Usage: vibe search <query>");
       process.exit(1);
     }
 
@@ -13,7 +13,9 @@ async function searchCommand(query, options) {
 
     if (results.length === 0) {
       logger.warn(`No templates found matching: "${query}"`);
-      logger.info('Try a different search term or run "vibe list" to see all templates');
+      logger.info(
+        'Try a different search term or run "vibe list" to see all templates',
+      );
       return;
     }
 
@@ -21,8 +23,8 @@ async function searchCommand(query, options) {
 
     // Group by type
     const grouped = {};
-    results.forEach(tpl => {
-      const type = tpl.type + 's';
+    results.forEach((tpl) => {
+      const type = tpl.type + "s";
       if (!grouped[type]) {
         grouped[type] = [];
       }
@@ -31,16 +33,16 @@ async function searchCommand(query, options) {
 
     // Display grouped results
     for (const [type, items] of Object.entries(grouped)) {
-      console.log('');
+      console.log("");
       console.log(`  ${getIcon(type)} ${capitalize(type)}:`);
-      items.forEach(tpl => {
+      items.forEach((tpl) => {
         logger.template(tpl.name, tpl.type, tpl.description);
       });
     }
 
     // Show usage hint
-    console.log('');
-    logger.subtitle('Install with: vibe install <template-name>');
+    console.log("");
+    logger.subtitle("Install with: vibe install <template-name>");
   } catch (error) {
     logger.error(`Search failed: ${error.message}`);
     process.exit(1);
@@ -49,14 +51,14 @@ async function searchCommand(query, options) {
 
 function getIcon(type) {
   const icons = {
-    agents: '🤖',
-    commands: '⚡',
-    mcps: '🔌',
-    settings: '⚙️',
-    hooks: '🪝',
-    skills: '🎨'
+    agents: "🤖",
+    commands: "⚡",
+    mcps: "🔌",
+    settings: "⚙️",
+    hooks: "🪝",
+    skills: "🎨",
   };
-  return icons[type] || '📦';
+  return icons[type] || "📦";
 }
 
 function capitalize(str) {

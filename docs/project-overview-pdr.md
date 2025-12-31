@@ -15,6 +15,7 @@ Vibery CLI is a command-line tool for installing Claude Code templates with a fo
 ## Functional Requirements
 
 ### F1: Template Installation
+
 - Install templates by name: `vibery install <template-name>`
 - Type-specific installation: `vibery install --agent <name>`, `vibery install --command <name>`, etc.
 - Support 6 template types with distinct installation paths
@@ -22,6 +23,7 @@ Vibery CLI is a command-line tool for installing Claude Code templates with a fo
 - Handle file overwrites with warnings
 
 ### F2: Template Discovery
+
 - List all available templates: `vibery list`
 - Filter by type: `vibery list -t agents`
 - Full-text search: `vibery search <query>`
@@ -29,6 +31,7 @@ Vibery CLI is a command-line tool for installing Claude Code templates with a fo
 - Pretty-printed terminal output with colors/icons
 
 ### F3: Registry Management
+
 - Load registry from JSON (600+ templates)
 - Cache registry in memory (singleton pattern)
 - Support multiple template categories (agents, commands, MCPs, skills, settings, hooks)
@@ -37,23 +40,27 @@ Vibery CLI is a command-line tool for installing Claude Code templates with a fo
 ## Non-Functional Requirements
 
 ### Performance
+
 - Registry load time: <100ms
 - Search operation: <50ms for 600+ templates
 - Installation copy operations: concurrent-safe
 
 ### Reliability
+
 - Graceful error handling (file not found, permission errors)
 - Proper exit codes (0 for success, 1 for failure)
 - Validation of source/target paths before operations
 - Backup warnings for overwrite scenarios
 
 ### Usability
+
 - Clear, color-coded terminal output
 - Contextual usage hints after installation
 - Descriptive error messages
 - Help text for all commands
 
 ### Maintainability
+
 - Modular service architecture (Registry, Installer, Logger)
 - Singleton pattern for shared state
 - Async/await for I/O operations
@@ -77,16 +84,17 @@ vibery (CLI)
 
 ## Template Installation Paths
 
-| Type | Destination | Format | Merge? |
-|------|-------------|--------|--------|
-| agent | `.claude/agents/` | `.md` | No |
-| command | `.claude/commands/` | `.md` | No |
-| mcp | `.mcp.json` | JSON | Yes |
-| skill | `.claude/skills/` | Directory | No |
-| setting | `.claude/` | `.json` | No |
-| hook | `.claude/` | `.json` | No |
+| Type    | Destination         | Format    | Merge? |
+| ------- | ------------------- | --------- | ------ |
+| agent   | `.claude/agents/`   | `.md`     | No     |
+| command | `.claude/commands/` | `.md`     | No     |
+| mcp     | `.mcp.json`         | JSON      | Yes    |
+| skill   | `.claude/skills/`   | Directory | No     |
+| setting | `.claude/`          | `.json`   | No     |
+| hook    | `.claude/`          | `.json`   | No     |
 
 **Special handling:**
+
 - MCP: Merges into `.mcp.json` under `mcpServers` key
 - Skill: Recursively copies entire directory
 - Others: Copy single file to destination
@@ -94,6 +102,7 @@ vibery (CLI)
 ## CLI Commands Specification
 
 ### `vibery install [template]`
+
 ```bash
 vibery install prompt-engineer              # By name
 vibery install --agent accessibility-tester # Type-specific
@@ -101,6 +110,7 @@ vibery install --agent auth-flow -d ./my-project  # Custom dir
 ```
 
 Options:
+
 - `-a, --agent <name>` - Install agent template
 - `-c, --command <name>` - Install command template
 - `-m, --mcp <name>` - Install MCP configuration
@@ -111,6 +121,7 @@ Options:
 - `-y, --yes` - Skip confirmation prompts
 
 ### `vibery list`
+
 ```bash
 vibery list           # All templates with summary
 vibery list -t agents # Only agents (60+ templates)
@@ -119,6 +130,7 @@ vibery list -t agents # Only agents (60+ templates)
 Output format: Category headers with icon, count, and paginated list.
 
 ### `vibery search <query>`
+
 ```bash
 vibery search nextjs          # Name and description search
 vibery search "auth" -t agent # Type-filtered search
@@ -168,10 +180,10 @@ Matches against template name and description (case-insensitive).
 
 ```json
 {
-  "chalk": "^4.1.2",      // Terminal colors
+  "chalk": "^4.1.2", // Terminal colors
   "commander": "^11.1.0", // CLI argument parsing
-  "fs-extra": "^11.2.0",  // Enhanced filesystem ops
-  "ora": "^5.4.1"         // Loading spinners
+  "fs-extra": "^11.2.0", // Enhanced filesystem ops
+  "ora": "^5.4.1" // Loading spinners
 }
 ```
 
@@ -179,13 +191,13 @@ Total bundle size: ~2MB (node_modules).
 
 ## Error Handling Strategy
 
-| Scenario | Handling | Exit Code |
-|----------|----------|-----------|
-| Template not found | Log error + suggestion | 1 |
-| Invalid source path | Throw error + path logged | 1 |
-| Permission denied | fs-extra catches, logged | 1 |
-| Already exists | Warning logged, overwrites | 0 |
-| Registry load fails | Throw error, full message | 1 |
+| Scenario            | Handling                   | Exit Code |
+| ------------------- | -------------------------- | --------- |
+| Template not found  | Log error + suggestion     | 1         |
+| Invalid source path | Throw error + path logged  | 1         |
+| Permission denied   | fs-extra catches, logged   | 1         |
+| Already exists      | Warning logged, overwrites | 0         |
+| Registry load fails | Throw error, full message  | 1         |
 
 ## Testing Strategy
 
@@ -197,12 +209,14 @@ Total bundle size: ~2MB (node_modules).
 ## Deployment Model
 
 **Distribution:** npm package (`vibery`) + GitHub Releases
+
 - Published to npm registry
 - `npm install -g vibery` for global CLI
 - `npx vibery` for one-off usage
 - Linked locally during development: `npm link`
 
 **Template Distribution:**
+
 - **Repository:** [vibery-studio/templates](https://github.com/vibery-studio/templates)
 - **Format:** GitHub Releases with tarball (294 templates)
 - **Contents:**

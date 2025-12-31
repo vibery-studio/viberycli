@@ -1,5 +1,5 @@
 ---
-name: solidjs-expert
+name: solidjs-pro
 description: SolidJS expert specializing in creating efficient and reactive UI components using SolidJS.
 model: claude-sonnet-4-20250514
 ---

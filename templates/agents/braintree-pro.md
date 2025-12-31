@@ -1,5 +1,5 @@
 ---
-name: braintree-expert
+name: braintree-pro
 description: Braintree specialist focusing on payment gateways, integrations, and optimization.
 model: claude-sonnet-4-20250514
 ---

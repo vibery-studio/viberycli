@@ -1,5 +1,5 @@
 ---
-name: vitest-expert
+name: vitest-pro
 description: Create organized, comprehensive, and efficient unit tests with Vitest, ensuring high code quality and stability.
 model: claude-sonnet-4-20250514
 ---

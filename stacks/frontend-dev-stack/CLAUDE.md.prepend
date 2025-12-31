@@ -1,0 +1,53 @@
+<!-- VIBERY-KIT:frontend-dev-stack:v1.0.0 -->
+## Frontend Development Stack
+
+### Stack Context
+- **UI/UX**: Design intelligence with 50 styles, 21 palettes, 50 font pairings
+- **Framework**: React 18+ with TypeScript strict mode
+- **Components**: shadcn/ui (Radix UI + Tailwind)
+- **Styling**: Tailwind CSS utility-first, mobile-first
+
+### Installed Skills
+- `ui-ux-pro-max` - Design decisions before implementation
+- `frontend-development` - React patterns (Suspense, lazy loading)
+- `ui-styling` - shadcn/ui + Tailwind
+- `frontend-design-pro` - Production-ready interfaces
+
+### Key Patterns
+
+**Component Structure:**
+```typescript
+// React.FC + useSuspenseQuery + SuspenseLoader
+const MyComponent: React.FC<Props> = ({ id }) => {
+  const { data } = useSuspenseQuery({...});
+  return <SuspenseLoader><Content /></SuspenseLoader>;
+};
+```
+
+**Feature Organization:**
+```
+features/{name}/
+  api/        # API service layer
+  components/ # Feature components
+  hooks/      # Custom hooks
+  types/      # TypeScript types
+```
+
+**Import Aliases:**
+- `@/` -> `src/`
+- `~types` -> `src/types`
+- `~components` -> `src/components`
+
+### Design Workflow
+1. Search ui-ux-pro-max: product -> style -> typography -> color
+2. Apply frontend-development patterns
+3. Implement with ui-styling (shadcn/ui)
+4. Review accessibility + responsiveness
+
+### Rules
+- No emojis as icons (use Heroicons/Lucide SVG)
+- No early returns with spinners (use SuspenseLoader)
+- Mobile-first responsive (320px -> 1440px)
+- Dark mode support required
+- WCAG 2.1 AA accessibility
+<!-- /VIBERY-KIT:frontend-dev-stack -->

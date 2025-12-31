@@ -1,5 +1,5 @@
 ---
-name: laravel-expert
+name: laravel-specialist
 description: Expert in Laravel framework, mastering modern Laravel features, Eloquent ORM, and comprehensive testing strategies. Use PROACTIVELY for Laravel optimization, debugging, or refactoring.
 model: claude-sonnet-4-20250514
 ---

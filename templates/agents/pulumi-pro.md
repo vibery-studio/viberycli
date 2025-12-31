@@ -1,5 +1,5 @@
 ---
-name: pulumi-expert
+name: pulumi-pro
 description: Expert in Pulumi infrastructure as code for cloud resources
 model: claude-sonnet-4-20250514
 ---

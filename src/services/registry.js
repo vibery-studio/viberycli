@@ -1,13 +1,13 @@
-const fs = require('fs-extra');
-const path = require('path');
-const remoteRegistry = require('./remote-registry');
+const fs = require("fs-extra");
+const path = require("path");
+const remoteRegistry = require("./remote-registry");
 
 class Registry {
   constructor() {
-    this.registryPath = path.join(__dirname, '../../registry.json');
-    this.stacksPath = path.join(__dirname, '../../stacks.json');
+    this.registryPath = path.join(__dirname, "../../registry.json");
+    this.kitsPath = path.join(__dirname, "../../kits.json");
     this.data = null;
-    this.stacksData = null;
+    this.kitsData = null;
     this.offlineMode = false;
   }
 
@@ -20,7 +20,21 @@ class Registry {
 
     try {
       // Try remote registry first (unless offline mode)
-      this.data = await remoteRegistry.getRegistry(this.offlineMode);
+      const rawData = await remoteRegistry.getRegistry(this.offlineMode);
+
+      // Normalize registry format (remote uses flat array, local uses object)
+      if (Array.isArray(rawData.templates)) {
+        // Convert flat array to object format
+        const grouped = {};
+        for (const item of rawData.templates) {
+          const typeKey = item.type.endsWith("s") ? item.type : `${item.type}s`;
+          if (!grouped[typeKey]) grouped[typeKey] = [];
+          grouped[typeKey].push(item);
+        }
+        rawData.templates = grouped;
+      }
+
+      this.data = rawData;
       return this.data;
     } catch (error) {
       throw new Error(`Failed to load registry: ${error.message}`);
@@ -36,7 +50,7 @@ class Registry {
     }
 
     // Return specific type
-    const typeKey = type.endsWith('s') ? type : `${type}s`;
+    const typeKey = type.endsWith("s") ? type : `${type}s`;
     return data.templates[typeKey] || [];
   }
 
@@ -45,15 +59,18 @@ class Registry {
 
     // Search in specified type or all types
     const typesToSearch = type
-      ? [type.endsWith('s') ? type : `${type}s`]
+      ? [type.endsWith("s") ? type : `${type}s`]
       : Object.keys(templates);
 
     for (const t of typesToSearch) {
       const found = templates[t]?.find(
-        tpl => tpl.name === name || tpl.name === `${name}.md` || tpl.name === `${name}.json`
+        (tpl) =>
+          tpl.name === name ||
+          tpl.name === `${name}.md` ||
+          tpl.name === `${name}.json`,
       );
       if (found) {
-        return { ...found, type: t.replace(/s$/, '') };
+        return { ...found, type: t.replace(/s$/, "") };
       }
     }
 
@@ -66,7 +83,7 @@ class Registry {
     const queryLower = query.toLowerCase();
 
     const typesToSearch = type
-      ? [type.endsWith('s') ? type : `${type}s`]
+      ? [type.endsWith("s") ? type : `${type}s`]
       : Object.keys(templates);
 
     for (const t of typesToSearch) {
@@ -76,7 +93,7 @@ class Registry {
         const descMatch = tpl.description?.toLowerCase().includes(queryLower);
 
         if (nameMatch || descMatch) {
-          results.push({ ...tpl, type: t.replace(/s$/, '') });
+          results.push({ ...tpl, type: t.replace(/s$/, "") });
         }
       }
     }
@@ -95,25 +112,27 @@ class Registry {
     return counts;
   }
 
-  async loadStacks() {
-    if (this.stacksData) return this.stacksData;
+  async loadKits() {
+    if (this.kitsData) return this.kitsData;
 
     try {
-      this.stacksData = await fs.readJson(this.stacksPath);
-      return this.stacksData;
+      this.kitsData = await fs.readJson(this.kitsPath);
+      return this.kitsData;
     } catch (error) {
-      throw new Error(`Failed to load stacks: ${error.message}`);
+      throw new Error(`Failed to load kits: ${error.message}`);
     }
   }
 
-  async getStacks() {
-    const data = await this.loadStacks();
-    return data.stacks || [];
+  async getKits() {
+    const data = await this.loadKits();
+    return data.kits || [];
   }
 
-  async findStack(name) {
-    const stacks = await this.getStacks();
-    return stacks.find(s => s.id === name || s.name.toLowerCase() === name.toLowerCase());
+  async findKit(name) {
+    const kits = await this.getKits();
+    return kits.find(
+      (k) => k.id === name || k.name.toLowerCase() === name.toLowerCase(),
+    );
   }
 }
 

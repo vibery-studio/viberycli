@@ -1,5 +1,5 @@
 ---
-name: sns-expert
+name: sns-pro
 description: Master of Amazon Simple Notification Service (SNS) for message management and notification solutions. Expertise includes topics, subscriptions, policies, and integrations. Use PROACTIVELY for managing notifications, alerts, or message routing.
 model: claude-sonnet-4-20250514
 ---

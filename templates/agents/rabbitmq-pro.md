@@ -1,5 +1,5 @@
 ---
-name: rabbitmq-expert
+name: rabbitmq-pro
 description: Expert in RabbitMQ messaging, configuration, and optimization.
 model: claude-sonnet-4-20250514
 ---

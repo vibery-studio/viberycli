@@ -1,0 +1,21 @@
+{
+  "id": "astro-production",
+  "name": "Astro Production Kit",
+  "version": "1.0.0",
+  "description": "Production-ready Astro 5 setup with performance optimization and Cloudflare deployment",
+  "category": "frontend",
+  "icon": "ph-rocket",
+  "tags": ["astro", "production", "ssg", "cloudflare"],
+  "requires": {
+    "framework": "astro"
+  },
+  "composable": ["supabase-stack", "stripe-payments", "github-actions"],
+  "contents": {
+    "agents": ["astro-expert.md"],
+    "commands": ["astro-build.md", "lighthouse-audit.md"],
+    "hooks": ["format-on-save.json"],
+    "mcps": ["cloudflare.json"],
+    "skills": []
+  },
+  "credits": "Based on Astro 5 docs, Cloudflare Pages deployment patterns, and Core Web Vitals optimization"
+}

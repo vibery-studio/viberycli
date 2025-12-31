@@ -1,5 +1,5 @@
 ---
-name: nextjs-expert
+name: nextjs-architecture-expert
 description: Expert in Next.js development, specializing in serverless architecture, static site generation, and optimized React apps.
 model: claude-sonnet-4-20250514
 ---

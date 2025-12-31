@@ -1,0 +1,200 @@
+{
+  "version": "20251231",
+  "kits": [
+    {
+      "id": "api-builder",
+      "name": "API Builder",
+      "version": "1.0.0",
+      "description": "Design, build, and document REST APIs with best practices",
+      "category": "backend",
+      "tags": ["api", "rest", "backend", "documentation"],
+      "composable": [],
+      "contents": {
+        "agents": [
+          "api-designer.md",
+          "api-documenter.md",
+          "backend-developer.md"
+        ],
+        "commands": ["doc-api.md", "generate-api-documentation.md"],
+        "skills": ["backend-development"],
+        "hooks": [],
+        "mcps": []
+      },
+      "path": "stacks/api-builder",
+      "item_count": 6
+    },
+    {
+      "id": "astro-production",
+      "name": "Astro Production Kit",
+      "version": "1.0.0",
+      "description": "Production-ready Astro 5 setup with performance optimization and Cloudflare deployment",
+      "category": "frontend",
+      "icon": "ph-rocket",
+      "tags": ["astro", "production", "ssg", "cloudflare"],
+      "requires": {
+        "framework": "astro"
+      },
+      "composable": ["supabase-stack", "stripe-payments", "github-actions"],
+      "contents": {
+        "agents": ["astro-expert.md"],
+        "commands": ["astro-build.md", "lighthouse-audit.md"],
+        "hooks": ["format-on-save.json"],
+        "mcps": ["cloudflare.json", "astro-docs.json"],
+        "skills": ["ui-ux-pro-max"]
+      },
+      "credits": "Based on Astro 5 docs, Cloudflare Pages deployment patterns, and Core Web Vitals optimization",
+      "path": "stacks/astro-production",
+      "item_count": 7
+    },
+    {
+      "id": "auth-flow-kit",
+      "name": "Auth Flow Kit",
+      "version": "1.0.0",
+      "description": "Secure authentication flows with Better Auth, security auditing, and best practices",
+      "category": "security",
+      "tags": ["auth", "security", "jwt", "oauth", "authentication"],
+      "composable": [],
+      "contents": {
+        "agents": ["security-auditor.md"],
+        "commands": ["add-authentication-system.md", "security-audit.md"],
+        "skills": ["better-auth"],
+        "hooks": [],
+        "mcps": []
+      },
+      "path": "stacks/auth-flow-kit",
+      "item_count": 4
+    },
+    {
+      "id": "brand-design",
+      "name": "Brand & Design",
+      "version": "1.0.0",
+      "description": "Create consistent brand identity and design systems",
+      "category": "design",
+      "tags": ["design", "branding", "ui", "design-system", "tailwind"],
+      "composable": [],
+      "contents": {
+        "agents": ["tailwind-pro.md"],
+        "commands": [],
+        "skills": ["ui-ux-pro-max", "ui-styling"],
+        "hooks": [],
+        "mcps": []
+      },
+      "path": "stacks/brand-design",
+      "item_count": 3
+    },
+    {
+      "id": "frontend-dev-stack",
+      "name": "Frontend Development Stack",
+      "version": "1.0.0",
+      "description": "Complete frontend development kit with UI/UX design intelligence, React/TypeScript patterns, and shadcn/ui + Tailwind styling",
+      "category": "frontend",
+      "composable": ["supabase-stack", "stripe-payments", "better-auth"],
+      "contents": {
+        "skills": [
+          "ui-ux-pro-max",
+          "frontend-development",
+          "ui-styling",
+          "frontend-design-pro"
+        ],
+        "agents": ["frontend-expert.md"],
+        "commands": ["ui-review.md", "component-gen.md"],
+        "hooks": ["prettier-format.json"]
+      },
+      "requires": {
+        "tools": ["node", "python3"],
+        "packages": ["tailwindcss", "react"]
+      },
+      "tags": [
+        "react",
+        "typescript",
+        "tailwind",
+        "shadcn",
+        "ui",
+        "ux",
+        "design"
+      ],
+      "path": "stacks/frontend-dev-stack",
+      "item_count": 8
+    },
+    {
+      "id": "landing-page-pro",
+      "name": "Landing Page Pro",
+      "version": "1.0.0",
+      "description": "Ship beautiful landing pages fast with Next.js, Tailwind, and SEO optimization",
+      "category": "frontend",
+      "tags": ["nextjs", "tailwind", "landing-page", "seo", "marketing"],
+      "composable": [],
+      "contents": {
+        "agents": [
+          "nextjs-developer.md",
+          "tailwind-pro.md",
+          "seo-specialist.md"
+        ],
+        "commands": [],
+        "skills": ["ui-ux-pro-max"],
+        "hooks": [],
+        "mcps": []
+      },
+      "path": "stacks/landing-page-pro",
+      "item_count": 4
+    },
+    {
+      "id": "saas-monetization",
+      "name": "SaaS Monetization",
+      "version": "1.0.0",
+      "description": "Integrate payments and subscriptions with Stripe and Polar for your SaaS",
+      "category": "backend",
+      "tags": ["stripe", "payments", "saas", "monetization", "subscriptions"],
+      "composable": [],
+      "contents": {
+        "agents": ["payment-integration.md", "stripe-pro.md"],
+        "commands": ["add-authentication-system.md"],
+        "skills": ["better-auth"],
+        "hooks": [],
+        "mcps": ["stripe.json"]
+      },
+      "path": "stacks/saas-monetization",
+      "item_count": 5
+    },
+    {
+      "id": "seo-optimizer",
+      "name": "SEO Optimizer",
+      "version": "1.0.0",
+      "description": "Improve search rankings with performance audits and SEO best practices",
+      "category": "marketing",
+      "tags": ["seo", "performance", "marketing", "optimization"],
+      "composable": [],
+      "contents": {
+        "agents": ["seo-specialist.md"],
+        "commands": [
+          "nextjs-performance-audit.md",
+          "performance-audit.md",
+          "optimize-bundle-size.md"
+        ],
+        "skills": [],
+        "hooks": [],
+        "mcps": []
+      },
+      "path": "stacks/seo-optimizer",
+      "item_count": 4
+    },
+    {
+      "id": "vue-complete",
+      "name": "Vue Complete",
+      "version": "1.0.0",
+      "description": "Full Vue.js development stack with styling and best practices",
+      "category": "frontend",
+      "tags": ["vue", "vuejs", "frontend", "tailwind"],
+      "composable": [],
+      "contents": {
+        "agents": ["vue-expert.md", "tailwind-pro.md"],
+        "commands": [],
+        "skills": ["ui-styling", "frontend-development"],
+        "hooks": [],
+        "mcps": []
+      },
+      "path": "stacks/vue-complete",
+      "item_count": 4
+    }
+  ]
+}

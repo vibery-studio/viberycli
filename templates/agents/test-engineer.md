@@ -1,5 +1,5 @@
 ---
-name: jest-expert
+name: test-engineer
 description: Expert in testing JavaScript applications using Jest, ensuring comprehensive test coverage and efficient test practices.
 model: claude-sonnet-4-20250514
 ---

@@ -6,6 +6,7 @@
 ## Architecture Patterns
 
 ### Singleton Pattern
+
 Services (Registry, Installer, Logger) are exported as module singletons:
 
 ```javascript
@@ -17,15 +18,16 @@ module.exports = new Registry();  // Singleton instance
 Benefits: Single instance per process, shared state, memory efficient.
 
 ### Type-Based Dispatch
+
 Install command uses switch statement for type-specific handling:
 
 ```javascript
 // src/commands/install.js
 switch (template.type) {
-  case 'mcp':
+  case "mcp":
     result = await installer.installMCP(template, targetDir);
     break;
-  case 'skill':
+  case "skill":
     result = await installer.installSkill(template, targetDir);
     break;
   default:
@@ -36,6 +38,7 @@ switch (template.type) {
 Rationale: Clear separation of concerns; extensible for new types.
 
 ### Async/Await
+
 All I/O operations use async/await for readability:
 
 ```javascript
@@ -65,6 +68,7 @@ src/
 ## Coding Standards
 
 ### JavaScript Style
+
 - ES6+ syntax (const/let, arrow functions, template literals)
 - No semicolons (follow default style)
 - 2-space indentation
@@ -72,6 +76,7 @@ src/
 - Comment complex logic; keep self-explanatory code
 
 ### Error Handling
+
 - Use try/catch for async operations
 - Return error objects: `{ success: false, error: message }`
 - Log errors with context
@@ -94,6 +99,7 @@ async install(template, targetDir) {
 ```
 
 ### Function Signatures
+
 Command handlers follow Commander.js convention:
 
 ```javascript
@@ -104,6 +110,7 @@ async installCommand(templateName, options) {
 ```
 
 ### Constants & Configuration
+
 Use objects for type mapping instead of magic strings:
 
 ```javascript
@@ -123,6 +130,7 @@ else if (type === 'command') { ... }
 ```
 
 ### Testing-Friendly Code
+
 - Avoid hard-coded paths; use configurable defaults
 - Inject dependencies where possible
 - Keep service methods pure (same inputs = same outputs)
@@ -130,6 +138,7 @@ else if (type === 'command') { ... }
 ## Service Layer
 
 ### Registry Service
+
 **File:** `src/services/registry.js`
 
 ```javascript
@@ -143,12 +152,14 @@ class Registry {
 ```
 
 **Behavior:**
+
 - Caches data in `this.data` after first load
 - Type parameter normalized (singular/plural)
 - Search is case-insensitive, matches name or description
 - Returns array of templates with `type` field normalized
 
 ### Installer Service
+
 **File:** `src/services/installer.js`
 
 ```javascript
@@ -162,12 +173,14 @@ class Installer {
 ```
 
 **Behavior:**
+
 - Validates source exists before copying
 - Creates target directories
 - Warns on overwrite
 - MCP special: merges into existing .mcp.json
 
 ### Logger Utility
+
 **File:** `src/utils/logger.js`
 
 ```javascript
@@ -184,27 +197,33 @@ logger.box(title, content)  // Box drawing
 ## Command Layer
 
 ### Install Command
+
 **File:** `src/commands/install.js`
 
 Flow:
+
 1. Determine template name from positional arg or type options
 2. Find template in registry
 3. Route to appropriate installer method
 4. Display result + usage hint
 
 ### List Command
+
 **File:** `src/commands/list.js`
 
 Flow:
+
 1. Get all templates and counts
 2. Filter by type if specified
 3. Display grouped by type with icons
 4. Show installation hint
 
 ### Search Command
+
 **File:** `src/commands/search.js`
 
 Flow:
+
 1. Validate query non-empty
 2. Search registry
 3. Group results by type
@@ -213,33 +232,35 @@ Flow:
 ## Naming Conventions
 
 ### Variables
+
 ```javascript
 // Template data
-template, templates, foundTemplate
+(template, templates, foundTemplate);
 
 // Paths
-sourcePath, targetPath, targetDir, targetDirPath
+(sourcePath, targetPath, targetDir, targetDirPath);
 
 // Template-related
-templateName, type, typeKey, typeDir
+(templateName, type, typeKey, typeDir);
 
 // Results
-result, results, query
+(result, results, query);
 
 // UI/Display
-spinner, icon, description, count, counts
+(spinner, icon, description, count, counts);
 ```
 
 ### Function Names
+
 ```javascript
 // Queries
-getTemplates(), findTemplate(), getCounts()
+(getTemplates(), findTemplate(), getCounts());
 
 // Operations
-install(), installSkill(), installMCP()
+(install(), installSkill(), installMCP());
 
 // Utilities
-getTargetDir(), getSourcePath()
+(getTargetDir(), getSourcePath());
 ```
 
 ## Type System Approach
@@ -262,12 +283,14 @@ async install(template, targetDir = '.') { ... }
 ## Dependency Management
 
 ### Core Dependencies
+
 - **chalk:** Terminal colors (lightweight, no tree-shaking issues)
 - **commander:** CLI parsing (industry standard)
 - **fs-extra:** Enhanced fs with promises (promisified methods)
 - **ora:** Loading spinners (minimal, focused)
 
 ### No Dependencies For
+
 - HTTP requests (not needed)
 - Database (not needed)
 - State management (simple module singletons sufficient)
@@ -276,6 +299,7 @@ async install(template, targetDir = '.') { ... }
 ## Development Practices
 
 ### Debugging
+
 ```bash
 # Run with verbose output
 DEBUG=* vibery list
@@ -285,6 +309,7 @@ node bin/vibery.js install test-name
 ```
 
 ### Local Testing
+
 ```bash
 # Link locally
 npm link
@@ -295,7 +320,9 @@ vibery install nextjs-architecture-expert
 ```
 
 ### Registry Updates
+
 Update `registry.json` via external build process or GitHub Releases. Format:
+
 ```json
 {
   "version": "1.0.0",
@@ -310,16 +337,19 @@ Update `registry.json` via external build process or GitHub Releases. Format:
 ## Performance Considerations
 
 ### Registry Caching
+
 - First load: reads registry.json from disk (~50ms)
 - Subsequent calls: return cached data (~0ms)
 - No file watching; cache cleared on process exit
 
 ### Search Optimization
+
 - Linear search (600 templates, ~30ms)
 - Case-insensitive string includes (no regex)
 - Early exit on match
 
 ### Installation
+
 - Concurrent file copy safe (fs-extra handles)
 - Overwrites warn but proceed (no blocking prompts)
 - MCP merge: read, update, write (atomic-ish)
@@ -330,24 +360,26 @@ Clear, actionable error messages:
 
 ```javascript
 // Good: Specific path, suggests next step
-logger.error('Template not found: auth-system')
-logger.info('Run "vibe list" to see available templates')
+logger.error("Template not found: auth-system");
+logger.info('Run "vibe list" to see available templates');
 
 // Good: Shows what was expected
-logger.warn(`File already exists: ${targetPath}`)
+logger.warn(`File already exists: ${targetPath}`);
 
 // Avoid: Vague errors
-logger.error('Error!')
+logger.error("Error!");
 ```
 
 ## Security Considerations
 
 ### Input Validation
+
 - Template name: alphanumeric + hyphens (registry match)
 - Type: must match allowed list (registry keys)
 - Directory paths: use path.join (prevent traversal)
 
 ### File Operations
+
 - Check source exists before copy
 - Warn before overwrite (user awareness)
 - No eval or dynamic requires
@@ -355,6 +387,7 @@ logger.error('Error!')
 ## Git & Version Control
 
 ### Commit Messages
+
 ```
 install: Add MCP merge logic
 registry: Cache templates in memory
@@ -364,6 +397,7 @@ commands: Improve search filtering
 Prefix with module name, brief description.
 
 ### Ignore Patterns
+
 ```
 node_modules/
 .env

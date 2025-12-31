@@ -1,12 +1,12 @@
-const fs = require('fs-extra');
-const path = require('path');
-const os = require('os');
+const fs = require("fs-extra");
+const path = require("path");
+const os = require("os");
 
 class CacheManager {
   constructor() {
-    this.cacheDir = path.join(os.homedir(), '.vibery', 'cache');
-    this.registryCachePath = path.join(this.cacheDir, 'registry.json');
-    this.archivesDir = path.join(this.cacheDir, 'archives');
+    this.cacheDir = path.join(os.homedir(), ".vibery", "cache");
+    this.registryCachePath = path.join(this.cacheDir, "registry.json");
+    this.archivesDir = path.join(this.cacheDir, "archives");
     this.registryTTL = 60 * 60 * 1000; // 1 hour
   }
 
@@ -81,7 +81,7 @@ class CacheManager {
   async clearAll() {
     try {
       await fs.remove(this.cacheDir);
-      return { success: true, message: 'Cache cleared successfully' };
+      return { success: true, message: "Cache cleared successfully" };
     } catch (error) {
       return { success: false, message: error.message };
     }
@@ -93,7 +93,7 @@ class CacheManager {
   async clearRegistry() {
     try {
       await fs.remove(this.registryCachePath);
-      return { success: true, message: 'Registry cache cleared' };
+      return { success: true, message: "Registry cache cleared" };
     } catch (error) {
       return { success: false, message: error.message };
     }
@@ -106,7 +106,7 @@ class CacheManager {
     try {
       await fs.remove(this.archivesDir);
       await fs.ensureDir(this.archivesDir);
-      return { success: true, message: 'Archives cache cleared' };
+      return { success: true, message: "Archives cache cleared" };
     } catch (error) {
       return { success: false, message: error.message };
     }
@@ -121,13 +121,13 @@ class CacheManager {
       registryCache: {
         exists: false,
         age: null,
-        valid: false
+        valid: false,
       },
       archives: {
         count: 0,
         totalSize: 0,
-        files: []
-      }
+        files: [],
+      },
     };
 
     try {
@@ -139,7 +139,7 @@ class CacheManager {
           exists: true,
           age: Math.floor(age / 1000 / 60), // minutes
           valid: age < this.registryTTL,
-          size: registryStats.size
+          size: registryStats.size,
         };
       }
 
@@ -149,13 +149,13 @@ class CacheManager {
         let totalSize = 0;
 
         for (const file of files) {
-          if (file.endsWith('.tar.gz')) {
+          if (file.endsWith(".tar.gz")) {
             const filePath = path.join(this.archivesDir, file);
             const fileStats = await fs.stat(filePath);
             totalSize += fileStats.size;
             stats.archives.files.push({
               name: file,
-              size: fileStats.size
+              size: fileStats.size,
             });
           }
         }

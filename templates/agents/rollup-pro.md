@@ -1,5 +1,5 @@
 ---
-name: rollup-expert
+name: rollup-pro
 description: Expert in Rollup.js for bundling JavaScript projects with optimal performance and configuration.
 model: claude-sonnet-4-20250514
 ---

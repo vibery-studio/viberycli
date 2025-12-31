@@ -1,5 +1,5 @@
 ---
-name: sequelize-expert
+name: sequelize-pro
 description: Expert in Sequelize ORM, proficient in database modeling, querying, associations, and migrations. Optimizes Sequelize usage for performance and data integrity.
 model: claude-sonnet-4-20250514
 ---

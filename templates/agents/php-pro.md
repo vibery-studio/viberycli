@@ -1,5 +1,5 @@
 ---
-name: php-expert
+name: php-pro
 description: Specialized in developing efficient, secure, and modern PHP applications adhering to best practices.
 model: claude-sonnet-4-20250514
 ---

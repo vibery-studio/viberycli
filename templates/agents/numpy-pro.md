@@ -1,5 +1,5 @@
 ---
-name: numpy-expert
+name: numpy-pro
 description: Expert in NumPy for scientific computing, data analysis, and numerical operations. Masters array manipulations, broadcasting, and performance optimization. Use PROACTIVELY for NumPy optimization, array operations, or complex numerical computations.
 model: claude-sonnet-4-20250514
 ---

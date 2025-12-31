@@ -1,0 +1,26 @@
+# Development files
+.claude/
+.DS_Store
+*.log
+*.swp
+*.swo
+*~
+
+# Test files
+test/
+tests/
+__tests__/
+*.test.js
+*.spec.js
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Misc
+.env
+.env.local
+node_modules/
+coverage/
+.nyc_output/

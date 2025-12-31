@@ -1,0 +1,20 @@
+{
+  "id": "seo-optimizer",
+  "name": "SEO Optimizer",
+  "version": "1.0.0",
+  "description": "Improve search rankings with performance audits and SEO best practices",
+  "category": "marketing",
+  "tags": ["seo", "performance", "marketing", "optimization"],
+  "composable": [],
+  "contents": {
+    "agents": ["seo-specialist.md"],
+    "commands": [
+      "nextjs-performance-audit.md",
+      "performance-audit.md",
+      "optimize-bundle-size.md"
+    ],
+    "skills": [],
+    "hooks": [],
+    "mcps": []
+  }
+}

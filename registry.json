@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "source": "generated",
-  "generated": "2025-12-21T07:00:27.399Z",
+  "generated": "2025-12-31T04:01:17.078Z",
   "templates": {
     "agents": [
       {
@@ -1144,6 +1144,11 @@
     ],
     "mcps": [
       {
+        "name": "astro-docs",
+        "path": "astro-docs.json",
+        "description": "MCP server: astro-docs"
+      },
+      {
         "name": "aws",
         "path": "aws.json",
         "description": "MCP server: aws"
@@ -1405,9 +1410,29 @@
     ],
     "skills": [
       {
+        "name": "aesthetic",
+        "path": "aesthetic",
+        "description": "Create aesthetically beautiful interfaces following proven design principles. Use when building UI/UX, analyzing designs from inspiration sites, ge..."
+      },
+      {
+        "name": "ai-multimodal",
+        "path": "ai-multimodal",
+        "description": "Process and generate multimedia content using Google Gemini API. Capabilities include analyze audio files (transcription with timestamps, summariza..."
+      },
+      {
         "name": "algorithmic-art",
         "path": "algorithmic-art",
         "description": "Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. Use this when users request creating art using c..."
+      },
+      {
+        "name": "backend-development",
+        "path": "backend-development",
+        "description": "Build robust backend systems with modern technologies (Node.js, Python, Go, Rust), frameworks (NestJS, FastAPI, Django), databases (PostgreSQL, Mon..."
+      },
+      {
+        "name": "better-auth",
+        "path": "better-auth",
+        "description": "Implement authentication and authorization with Better Auth - a framework-agnostic TypeScript authentication framework. Features include email/pass..."
       },
       {
         "name": "brand-guidelines",
@@ -1420,9 +1445,44 @@
         "description": "Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, pi..."
       },
       {
+        "name": "chrome-devtools",
+        "path": "chrome-devtools",
+        "description": "Browser automation, debugging, and performance analysis using Puppeteer CLI scripts. Use for automating browsers, taking screenshots, analyzing per..."
+      },
+      {
+        "name": "claude-code",
+        "path": "claude-code",
+        "description": "Claude Code is Anthropic's agentic coding tool that lives in the terminal and helps turn ideas into code faster. It combines autonomous planning, e..."
+      },
+      {
+        "name": "code-review",
+        "path": "code-review",
+        "description": "Use when receiving code review feedback (especially if unclear or technically questionable), when completing tasks or major features requiring revi..."
+      },
+      {
+        "name": "context-engineering",
+        "path": "context-engineering",
+        "description": "Master context engineering for AI agents - token optimization, degradation patterns, compression, memory systems, multi-agent coordination, evaluat..."
+      },
+      {
+        "name": "databases",
+        "path": "databases",
+        "description": "Work with MongoDB (document database, BSON documents, aggregation pipelines, Atlas cloud) and PostgreSQL (relational database, SQL queries, psql CL..."
+      },
+      {
+        "name": "devops",
+        "path": "devops",
+        "description": "Deploy and manage cloud infrastructure on Cloudflare (Workers, R2, D1, KV, Pages, Durable Objects, Browser Rendering), Docker containers, and Googl..."
+      },
+      {
         "name": "doc-coauthoring",
         "path": "doc-coauthoring",
         "description": "Guide users through a structured workflow for co-authoring documentation. Use when user wants to write documentation, proposals, technical specs, d..."
+      },
+      {
+        "name": "docs-seeker",
+        "path": "docs-seeker",
+        "description": "\"Searching internet for technical documentation using llms.txt standard, GitHub repositories via Repomix, and parallel exploration. Use when user n..."
       },
       {
         "name": "docx",
@@ -1435,6 +1495,16 @@
         "description": "Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages..."
       },
       {
+        "name": "frontend-development",
+        "path": "frontend-development",
+        "description": "Frontend development guidelines for React/TypeScript applications. Modern patterns including Suspense, lazy loading, useSuspenseQuery, file organiz..."
+      },
+      {
+        "name": "google-adk-python",
+        "path": "google-adk-python",
+        "description": "Build AI agents with Google's Agent Development Kit (ADK) Python - an open-source toolkit for building, evaluating, and deploying AI agents. Featur..."
+      },
+      {
         "name": "internal-comms",
         "path": "internal-comms",
         "description": "A set of resources to help me write all kinds of internal communications, using the formats that my company likes to use. Claude should use this sk..."
@@ -1443,6 +1513,21 @@
         "name": "mcp-builder",
         "path": "mcp-builder",
         "description": "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tool..."
+      },
+      {
+        "name": "mcp-management",
+        "path": "mcp-management",
+        "description": "Manage Model Context Protocol (MCP) servers - discover, analyze, and execute tools/prompts/resources from configured MCP servers. Use when working ..."
+      },
+      {
+        "name": "media-processing",
+        "path": "media-processing",
+        "description": "Process multimedia files with FFmpeg (video/audio encoding, conversion, streaming, filtering, hardware acceleration) and ImageMagick (image manipul..."
+      },
+      {
+        "name": "mermaidjs-v11",
+        "path": "mermaidjs-v11",
+        "description": "Create diagrams and visualizations using Mermaid.js v11 syntax. Use when generating flowcharts, sequence diagrams, class diagrams, state diagrams, ..."
       },
       {
         "name": "pdf",
@@ -1455,6 +1540,21 @@
         "description": "\"Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) ..."
       },
       {
+        "name": "repomix",
+        "path": "repomix",
+        "description": "Package entire code repositories into single AI-friendly files using Repomix. Capabilities include pack codebases with customizable include/exclude..."
+      },
+      {
+        "name": "sequential-thinking",
+        "path": "sequential-thinking",
+        "description": "Use when complex problems require systematic step-by-step reasoning with ability to revise thoughts, branch into alternative approaches, or dynamic..."
+      },
+      {
+        "name": "shopify",
+        "path": "shopify",
+        "description": "Build Shopify applications, extensions, and themes using GraphQL/REST APIs, Shopify CLI, Polaris UI components, and Liquid templating. Capabilities..."
+      },
+      {
         "name": "skill-creator",
         "path": "skill-creator",
         "description": "Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Cla..."
@@ -1465,14 +1565,34 @@
         "description": "Knowledge and utilities for creating animated GIFs optimized for Slack. Provides constraints, validation tools, and animation concepts. Use when us..."
       },
       {
+        "name": "template-skill",
+        "path": "template-skill",
+        "description": "Replace with description of the skill and when Claude should use it."
+      },
+      {
         "name": "theme-factory",
         "path": "theme-factory",
         "description": "Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landing pages, etc. There are 10 pre-set themes w..."
       },
       {
+        "name": "ui-styling",
+        "path": "ui-styling",
+        "description": "Create beautiful, accessible user interfaces with shadcn/ui components (built on Radix UI + Tailwind), Tailwind CSS utility-first styling, and canv..."
+      },
+      {
+        "name": "ui-ux-pro-max",
+        "path": "ui-ux-pro-max",
+        "description": "\"UI/UX design intelligence. 50 styles, 21 palettes, 50 font pairings, 20 charts, 8 stacks (React, Next.js, Vue, Svelte, SwiftUI, React Native, Flut..."
+      },
+      {
         "name": "web-artifacts-builder",
         "path": "web-artifacts-builder",
         "description": "Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn..."
+      },
+      {
+        "name": "web-frameworks",
+        "path": "web-frameworks",
+        "description": "Build modern full-stack web applications with Next.js (App Router, Server Components, RSC, PPR, SSR, SSG, ISR), Turborepo (monorepo management, tas..."
       },
       {
         "name": "webapp-testing",

@@ -1,23 +1,23 @@
-const ora = require('ora');
-const logger = require('../utils/logger');
-const cacheManager = require('../services/cache-manager');
+const ora = require("ora");
+const logger = require("../utils/logger");
+const cacheManager = require("../services/cache-manager");
 
 async function cacheCommand(action, options) {
   const spinner = ora();
 
   try {
     switch (action) {
-      case 'clear':
+      case "clear":
         await clearCache(spinner, options);
         break;
 
-      case 'status':
+      case "status":
         await showCacheStatus(spinner);
         break;
 
       default:
         logger.error(`Unknown cache action: ${action}`);
-        logger.info('Usage: vibery cache <clear|status>');
+        logger.info("Usage: vibery cache <clear|status>");
         process.exit(1);
     }
   } catch (error) {
@@ -27,7 +27,7 @@ async function cacheCommand(action, options) {
 }
 
 async function clearCache(spinner, options) {
-  spinner.start('Clearing cache...');
+  spinner.start("Clearing cache...");
 
   let result;
 
@@ -48,46 +48,46 @@ async function clearCache(spinner, options) {
 }
 
 async function showCacheStatus(spinner) {
-  spinner.start('Checking cache...');
+  spinner.start("Checking cache...");
 
   const stats = await cacheManager.getStats();
 
   spinner.stop();
 
-  logger.title('Cache Status');
+  logger.title("Cache Status");
   logger.info(`Location: ${stats.cacheDir}`);
-  console.log('');
+  console.log("");
 
-  logger.subtitle('Registry Cache:');
+  logger.subtitle("Registry Cache:");
   if (stats.registryCache.exists) {
-    const validLabel = stats.registryCache.valid ? '✓ Valid' : '✗ Expired';
+    const validLabel = stats.registryCache.valid ? "✓ Valid" : "✗ Expired";
     logger.info(`  Status: ${validLabel}`);
     logger.info(`  Age: ${stats.registryCache.age} minutes`);
     logger.info(`  Size: ${formatBytes(stats.registryCache.size)}`);
   } else {
-    logger.info('  Status: Not cached');
+    logger.info("  Status: Not cached");
   }
-  console.log('');
+  console.log("");
 
-  logger.subtitle('Template Archives:');
+  logger.subtitle("Template Archives:");
   logger.info(`  Count: ${stats.archives.count} files`);
   logger.info(`  Total Size: ${formatBytes(stats.archives.totalSize)}`);
 
   if (stats.archives.files.length > 0) {
-    console.log('');
-    logger.subtitle('Cached Files:');
-    stats.archives.files.forEach(file => {
+    console.log("");
+    logger.subtitle("Cached Files:");
+    stats.archives.files.forEach((file) => {
       logger.info(`  • ${file.name} (${formatBytes(file.size)})`);
     });
   }
 }
 
 function formatBytes(bytes) {
-  if (bytes === 0) return '0 Bytes';
+  if (bytes === 0) return "0 Bytes";
   const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const sizes = ["Bytes", "KB", "MB", "GB"];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+  return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
 }
 
 module.exports = cacheCommand;
