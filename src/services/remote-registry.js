@@ -5,15 +5,15 @@ const cacheManager = require("./cache-manager");
 
 class RemoteRegistry {
   constructor() {
-    // GitHub raw content URL - templates available immediately after push
+    // GitHub raw content URL - templates repo is single source of truth
     this.repoOwner = process.env.VIBERY_REPO_OWNER || "vibery-studio";
-    this.repoName = process.env.VIBERY_REPO_NAME || "viberycli";
+    this.repoName = process.env.VIBERY_REPO_NAME || "templates";
     this.branch = process.env.VIBERY_BRANCH || "main";
 
-    // Base URLs (repo root is the CLI, no /cli prefix)
+    // Base URLs (flat structure: /agents, /skills, etc.)
     this.rawBaseUrl = `https://raw.githubusercontent.com/${this.repoOwner}/${this.repoName}/${this.branch}`;
     this.registryUrl = `${this.rawBaseUrl}/registry.json`;
-    this.templatesBaseUrl = `${this.rawBaseUrl}/templates`;
+    this.templatesBaseUrl = this.rawBaseUrl; // No /templates prefix - flat structure
 
     // Bundled registry as fallback for offline mode
     this.bundledRegistryPath = path.join(__dirname, "../../registry.json");

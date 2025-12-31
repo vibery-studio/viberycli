@@ -176,8 +176,8 @@ class Installer {
   async fetchSkillFromRemote(skillName, targetPath, onProgress = null) {
     const https = require("https");
 
-    // Use GitHub API to get directory listing (repo root is CLI, no /cli prefix)
-    const apiUrl = `https://api.github.com/repos/${remoteRegistry.repoOwner}/${remoteRegistry.repoName}/contents/templates/skills/${skillName}?ref=${remoteRegistry.branch}`;
+    // Use GitHub API to get directory listing (flat structure: /skills/name)
+    const apiUrl = `https://api.github.com/repos/${remoteRegistry.repoOwner}/${remoteRegistry.repoName}/contents/skills/${skillName}?ref=${remoteRegistry.branch}`;
 
     try {
       // Fetch directory listing from GitHub API
