@@ -5,9 +5,20 @@ const installer = require("../services/installer");
 
 async function installCommand(templateNames, options) {
   const spinner = ora();
+  const os = require("os");
+  const path = require("path");
 
   try {
-    const targetDir = options.directory || ".";
+    // Determine target directory
+    let targetDir = options.directory || ".";
+
+    // Handle --global flag: install to ~/.claude/
+    if (options.global) {
+      targetDir = path.join(os.homedir(), ".claude");
+      // For global installs, we need to go up one level since installer adds .claude/
+      targetDir = os.homedir();
+      logger.info(`Installing globally to ~/.claude/`);
+    }
 
     // Set offline mode if specified
     if (options.offline) {
@@ -134,7 +145,7 @@ async function installCommand(templateNames, options) {
         toInstall[0].name,
         toInstall[0].type,
       );
-      if (template) showUsageHint(template);
+      if (template) showUsageHint(template, options.global);
     }
 
     if (failCount > 0 && successCount === 0) {
@@ -147,11 +158,15 @@ async function installCommand(templateNames, options) {
   }
 }
 
-function showUsageHint(template) {
+function showUsageHint(template, isGlobal = false) {
   console.log("");
   switch (template.type) {
     case "agent":
-      logger.info("Use this agent by mentioning it in Claude Code");
+      if (isGlobal) {
+        logger.info("Agent installed globally - available in all projects");
+      } else {
+        logger.info("Use this agent by mentioning it in Claude Code");
+      }
       break;
     case "command":
       logger.info(`Run with: /${template.name.replace(".md", "")}`);
@@ -166,7 +181,11 @@ function showUsageHint(template) {
       logger.info("Hook will trigger on matching tool use");
       break;
     case "skill":
-      logger.info("Skill is ready to use in your project");
+      if (isGlobal) {
+        logger.info("Skill installed globally - available in all projects");
+      } else {
+        logger.info("Skill is ready to use in your project");
+      }
       break;
   }
 }
